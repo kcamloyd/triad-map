@@ -2,8 +2,8 @@
 var map;
 function initMap() {
   map = new google.maps.Map(document.getElementById("map"), {
-      center: {lat: 35.940212, lng: -79.823914},
-      zoom: 10
+      center: {lat: 36.105982, lng: -79.856529},
+      zoom: 11
   });
   var oldSalem = new google.maps.Marker({
       position: {lat: 36.087144, lng: -80.242494},
