@@ -15,19 +15,28 @@
   </head>
 
   <body>
+    <div id="map"></div>
+
     <!-- Knockout framework -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
+
     <!-- jQuery -->
     <script
       src="https://code.jquery.com/jquery-3.2.1.min.js"
       integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
       crossorigin="anonymous"></script>
+
     <!-- Bootstrap JS -->
     <script
       src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
       integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
       crossorigin="anonymous"></script>
-    <!-- map viewmodel -->
+
+    <!-- map and markers -->
     <script src="js/map.js"></script>
-</body>
+
+    <!-- Google Maps API -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHsu61q9yINoODaZ6TeLPprTF6raCwL4w&callback=initMap">
+    </script>
+  </body>
 </html>
