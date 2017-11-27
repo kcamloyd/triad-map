@@ -41,7 +41,7 @@ initialMarkers.forEach(function(markerLocation){
 
 function initMap() {
   var map = new google.maps.Map(document.getElementById("map"), {
-    center: {lat: 36.105982, lng: -79.856529},
+    center: {lat: 36.109034, lng: -79.859619},
     zoom: 11
   });
 
