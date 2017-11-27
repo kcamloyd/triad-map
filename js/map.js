@@ -27,18 +27,21 @@ var initialMarkers = [
   }
 ]
 
+// Class for creating new marker list instances for each location
 var Marker = function(loc) {
   this.position = {lat: loc.lat, lng: loc.lng},
   this.title = loc.title
 }
 
 // ViewModel
+// Create observable array for displaying marker names in the sidebar list
 var markers = ko.observableArray([]);
 
 initialMarkers.forEach(function(markerLocation){
   markers.push(new Marker(markerLocation));
 });
 
+// Initialize map with markers
 function initMap() {
   var map = new google.maps.Map(document.getElementById("map"), {
     center: {lat: 36.109034, lng: -79.859619},
