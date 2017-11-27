@@ -25,10 +25,10 @@ var initialMarkers = [
     link: "https://www.ncparks.gov/haw-river-state-park"
   },
   {
-    title: "Print Works Bistro",
-    lat: 36.088826,
-    lng: -79.821446,
-    link: "https://www.printworksbistro.com/"
+    title: "Greensboro Arboretum",
+    lat: 36.07262,
+    lng: -79.838784,
+    link: "http://www.greensborobeautiful.org/gardens/greensboro_arboretum.php"
   }
 ]
 
