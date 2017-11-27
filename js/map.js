@@ -3,27 +3,32 @@ var initialMarkers = [
   {
     title: "Old Salem",
     lat: 36.087144,
-    lng: -80.242494
+    lng: -80.242494,
+    link: "http://www.oldsalem.org/"
   },
   {
     title: "Greensboro Science Center",
     lat: 36.129938,
-    lng: -79.834127
+    lng: -79.834127,
+    link: "http://www.greensboroscience.org/"
   },
   {
     title: "Elon University",
     lat: 36.103408,
-    lng: -79.501255
+    lng: -79.501255,
+    link: "https://www.elon.edu/home/"
   },
   {
     title: "Haw River State Park",
     lat: 36.250866,
-    lng: -79.756397
+    lng: -79.756397,
+    link: "https://www.ncparks.gov/haw-river-state-park"
   },
   {
     title: "Print Works Bistro",
     lat: 36.088826,
-    lng: -79.821446
+    lng: -79.821446,
+    link: "https://www.printworksbistro.com/"
   }
 ]
 
