@@ -53,12 +53,15 @@ function initMap() {
     zoom: 11
   });
 
+// Create marker and info window for each place in initialMarkers
   initialMarkers.forEach(function(markerData) {
+    // Displays marker on map
     var mark = new google.maps.Marker({
       position: {lat: markerData.lat, lng: markerData.lng},
       map: map,
       title: markerData.title
     });
+    // Displays info window when marker is clicked
     var info = new google.maps.InfoWindow({
       content: '<a target=blank href="' + markerData.link + '">' + markerData.title + '</a>'
     });
