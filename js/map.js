@@ -54,10 +54,16 @@ function initMap() {
   });
 
   initialMarkers.forEach(function(markerData) {
-    new google.maps.Marker({
-    position: {lat: markerData.lat, lng: markerData.lng},
-    map: map,
-    title: markerData.title
+    var mark = new google.maps.Marker({
+      position: {lat: markerData.lat, lng: markerData.lng},
+      map: map,
+      title: markerData.title
+    });
+    var info = new google.maps.InfoWindow({
+      content: '<a target=blank href="' + markerData.link + '">' + markerData.title + '</a>'
+    });
+    mark.addListener('click', function(){
+      info.open(map, mark);
     });
   });
 };
