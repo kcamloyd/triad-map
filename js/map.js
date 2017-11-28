@@ -53,7 +53,7 @@ function initMap() {
     zoom: 11
   });
 
-// Create marker and info window for each place in initialMarkers
+  // Create marker and info window for each place in initialMarkers
   initialMarkers.forEach(function(markerData) {
     // Displays marker on map
     var mark = new google.maps.Marker({
@@ -61,12 +61,37 @@ function initMap() {
       map: map,
       title: markerData.title
     });
+
+    // Get Flickr photo data
+    var flickrRequestUrl = "https://api.flickr.com/services/rest/?method=" +
+      "flickr.photos.search&api_key=013b067090a28369bb3bb907d41b07e9&tags=%22" +
+      markerData.title + "%22&format=json";
+
+    var flickrData = $.getJSON(flickrRequestUrl, function(data){
+      var photoList = data.photos.photo;
+      var photos = [];
+      for (var i=0; i<10; i++){
+        var photo = photoList[i];
+        photos.push("https://farm" + photo.farm + ".staticflickr.com/" +
+        photo.server + "/" + photo.id + "_" + photo.secret + "_t.jpg");
+      };
+      return photos;
+    }).fail(function() {
+      return "error"
+    });
+
     // Displays info window when marker is clicked
     var info = new google.maps.InfoWindow({
-      content: '<a target=blank href="' + markerData.link + '">' + markerData.title + '</a>'
+      content: infoContent(markerData, flickrData)
     });
-    mark.addListener('click', function(){
+    mark.addListener("click", function(){
       info.open(map, mark);
     });
   });
 };
+
+// View
+// Join HTML to render place link and Flickr photos
+function infoContent(markerData, flickrData){
+  return '<a target=blank href="' + markerData.link + '">' + markerData.title + '</a>'
+}
