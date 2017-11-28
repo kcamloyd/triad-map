@@ -67,9 +67,10 @@ function initMap() {
       "flickr.photos.search&api_key=013b067090a28369bb3bb907d41b07e9&tags=%22" +
       markerData.title + "%22&format=json";
 
-    var flickrData = $.getJSON(flickrRequestUrl, function(data){
+    var flickrDisplay = $.getJSON(flickrRequestUrl, function(data){
       var photoList = data.photos.photo;
       var photos = [];
+      // Create an array of display URLs for the first 10 photos returned
       for (var i=0; i<10; i++){
         var photo = photoList[i];
         photos.push("https://farm" + photo.farm + ".staticflickr.com/" +
@@ -82,7 +83,7 @@ function initMap() {
 
     // Displays info window when marker is clicked
     var info = new google.maps.InfoWindow({
-      content: infoContent(markerData, flickrData)
+      content: infoContent(markerData, flickrDisplay)
     });
     mark.addListener("click", function(){
       info.open(map, mark);
