@@ -32,42 +32,52 @@ var initialMarkers = [
   }
 ]
 
-// Get Flickr photo data for each object in initialMarkers
-function jsonData(locationArray) {
-  for (var m=0; m<locationArray.length; m++){
-    var marker = initialMarkers[m];
+// Get Flickr photo data for each location
+function ajaxCall(locations) {
+  // Iterate through each location
+  for (var m=0; m<locations.length; m++){
+    // Set current location to the "marker" variable for easy reference
+    var marker = locations[m];
+    // Set the Flickr api request url to search photos with the location name as a tag
     var flickrRequestUrl = "https://api.flickr.com/services/rest/?method=" +
-      "flickr.photos.search&api_key=013b067090a28369bb3bb907d41b07e9&tags=%22" +
-      marker.title + "%22&format=json";
+      "flickr.photos.search&api_key=cd7a678487f7cec2b53ed11ba7a1de15&tags=" +
+      marker.title + "&format=json&nojsoncallback=1";
+    // Create an empty array to temporarily store links for each photo returned by ajax call
+    // Should also clear the array before the ajax call for the next location
+    var photoLinks = [];
 
-    $.getJSON(flickrRequestUrl, function(data){
-      var photoList = data.photos.photo;
-      for (var i=0; i<10; i++){
-        var photo = photoList[i];
-        // Store photo URLs as new key/value pairs in the locations array
-        marker.thumbSource = "https://farm" + photo.farm + ".staticflickr.com/" +
-          photo.server + "/" + photo.id + "_" + photo.secret + "_t.jpg";
-        marker.flickLink = "https://www.flickr.com/photos/" + photo.owner +
-        "/" + photo.id};
-    }).fail(function() {
-      return "error"
+    $.ajax({
+      url: flickrRequestUrl,
+      success: function(response) {
+        var photoList = response.photos.photo;
+        for (var i=0; i<10; i++){
+          var photo = photoList[i];
+          photoLinks.push(
+            {"thumbSource": "https://farm" + photo.farm + ".staticflickr.com/" +
+              photo.server + "/" + photo.id + "_" + photo.secret + "_t.jpg",
+              "flickrLink": "https://www.flickr.com/photos/" + photo.owner +
+              "/" + photo.id});
+        };
+        marker.photos = photoLinks;
+      },
+      error: function() {
+        console.log("Error in ajax call")
+      }
     });
   };
 };
+
+ajaxCall(initialMarkers);
 
 // Class for creating new marker list instances for each location
 var Marker = function(loc) {
   this.position = {lat: loc.lat, lng: loc.lng},
   this.title = loc.title
-}
+};
 
 
 // *** ViewModels ***
 // ** ViewModel for map **
-
-// Call JSON function to add photo data to location data
-jsonData(initialMarkers);
-
 // Initialize map with markers
 function initMap() {
   var map = new google.maps.Map(document.getElementById("map"), {
@@ -107,30 +117,27 @@ initialMarkers.forEach(function(markerLocation){
 // ** View for map **
 // Generate HTML to render place link and Flickr photos in info window
 function infoContent(placeData){
-  var content =
-    "<a target=blank href='" + placeData.link + "'>" +
+  var content = "<a target=blank href='" + placeData.link + "'>" +
       "<h3>" + placeData.title + "</h3>" +
     "</a>" +
-    "<div class='carousel'>";
+    "<div class='carousel'>"
   placeData.forEach(function(place){
-    content +=
-      "<figure class='carousel-item'>" +
+    content += "<figure class='carousel-item'>" +
         "<img src='" + place.thumbSource + "'>" +
         "<figcaption>" +
           "<a target='blank' href='" + place.flickrLink + "'>" +
             "View this photo on Flickr" +
           "</a>" +
         "</figcaption>" +
-      "</figure>";
+      "</figure>"
   });
-  content +=
-    "</div>" +
+  content += "</div>" +
     "<script type='text/javascript'>" +
       "$(document).ready(function(){" +
         "$('.carousel').carousel();" +
       "});" +
-    "</script>";
-  return content
+    "</script>"
+  return content;
 };
 
 // ** View for list **
