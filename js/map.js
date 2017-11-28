@@ -1,4 +1,4 @@
-// Model
+// *** Model ***
 var initialMarkers = [
   {
     title: "Old Salem",
@@ -38,14 +38,9 @@ var Marker = function(loc) {
   this.title = loc.title
 }
 
-// ViewModel
-// Create observable array for displaying marker names in the sidebar list
-var markers = ko.observableArray([]);
 
-initialMarkers.forEach(function(markerLocation){
-  markers.push(new Marker(markerLocation));
-});
-
+// *** ViewModels ***
+// ** ViewModel for map **
 // Initialize map with markers
 function initMap() {
   var map = new google.maps.Map(document.getElementById("map"), {
@@ -98,8 +93,20 @@ function initMap() {
   });
 };
 
-// View
+// ** ViewModel for list **
+// Create observable array for displaying marker names in the sidebar list
+var markers = ko.observableArray([]);
+
+initialMarkers.forEach(function(markerLocation){
+  markers.push(new Marker(markerLocation));
+});
+
+
+// *** View ***
+// ** View for map **
 // Join HTML to render place link and Flickr photos
 function infoContent(markerData, flickrData){
   return '<a target=blank href="' + markerData.link + '">' + markerData.title + '</a>'
 }
+
+// ** View for list **
