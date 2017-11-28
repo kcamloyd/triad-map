@@ -33,7 +33,7 @@ var initialMarkers = [
 ]
 
 // Get Flickr photo data for each location
-for (var m=0; m<initialMarkers.length; m++){
+function getAjax(marker) {
   // Set current location to the "marker" variable for easy reference
   var marker = initialMarkers[m];
   // Set the Flickr api request url to search photos with the location name as a tag
@@ -57,12 +57,16 @@ for (var m=0; m<initialMarkers.length; m++){
             "/" + photo.id}
         );
       };
-      place.photos = photoLinks;
+      marker.photos = photoLinks;
     },
     error: function() {
       console.log("Error in ajax call")
     }
   });
+};
+
+for (var m=0; m<initialMarkers.length; m++){
+  getAjax(initialMarkers[m]);
 };
 
 // Class for creating new marker list instances for each location
