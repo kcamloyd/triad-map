@@ -46,24 +46,28 @@ function ajaxCall(locations) {
     // Should also clear the array before the ajax call for the next location
     var photoLinks = [];
 
-    $.ajax({
-      url: flickrRequestUrl,
-      success: function(response) {
-        var photoList = response.photos.photo;
-        for (var i=0; i<10; i++){
-          var photo = photoList[i];
-          photoLinks.push(
-            {"thumbSource": "https://farm" + photo.farm + ".staticflickr.com/" +
-              photo.server + "/" + photo.id + "_" + photo.secret + "_t.jpg",
-              "flickrLink": "https://www.flickr.com/photos/" + photo.owner +
-              "/" + photo.id});
-        };
-        marker.photos = photoLinks;
-      },
-      error: function() {
-        console.log("Error in ajax call")
-      }
-    });
+    function getPhotoLinks(loc) {
+      $.ajax({
+        url: flickrRequestUrl,
+        success: function(response) {
+          var photoList = response.photos.photo;
+          for (var i=0; i<10; i++){
+            var photo = photoList[i];
+            photoLinks.push(
+              {"thumbSource": "https://farm" + photo.farm + ".staticflickr.com/" +
+                photo.server + "/" + photo.id + "_" + photo.secret + "_t.jpg",
+                "flickrLink": "https://www.flickr.com/photos/" + photo.owner +
+                "/" + photo.id});
+          };
+          loc.photos = photoLinks;
+        },
+        error: function() {
+          console.log("Error in ajax call")
+        }
+      });
+    };
+
+    getPhotoLinks(marker);
   };
 };
 
@@ -96,7 +100,7 @@ function initMap() {
 
     // Displays info window when marker is clicked
     var info = new google.maps.InfoWindow({
-      content: infoContent(initialMarkers)
+      content: infoContent(markerData)
     });
     mark.addListener("click", function(){
       info.open(map, mark);
@@ -118,25 +122,30 @@ initialMarkers.forEach(function(markerLocation){
 // Generate HTML to render place link and Flickr photos in info window
 function infoContent(placeData){
   var content = "<a target=blank href='" + placeData.link + "'>" +
-      "<h3>" + placeData.title + "</h3>" +
+      "<h5>" + placeData.title + "</h5>" +
     "</a>" +
     "<div class='carousel'>"
-  placeData.forEach(function(place){
-    content += "<figure class='carousel-item'>" +
-        "<img src='" + place.thumbSource + "'>" +
-        "<figcaption>" +
-          "<a target='blank' href='" + place.flickrLink + "'>" +
-            "View this photo on Flickr" +
-          "</a>" +
-        "</figcaption>" +
-      "</figure>"
-  });
-  content += "</div>" +
-    "<script type='text/javascript'>" +
-      "$(document).ready(function(){" +
-        "$('.carousel').carousel();" +
-      "});" +
-    "</script>"
+    var photoList = placeData.photos
+    if (photoList) {
+      photoList.forEach(function(photo){
+        content += "<figure class='carousel-item'>" +
+            "<img src='" + photo.thumbSource + "'>" +
+            "<figcaption>" +
+              "<a target='blank' href='" + photo.flickrLink + "'>" +
+                "View this photo on Flickr" +
+              "</a>" +
+            "</figcaption>" +
+          "</figure>"
+      });
+      content += "</div>" +
+        "<script type='text/javascript'>" +
+          "$(document).ready(function(){" +
+            "$('.carousel').carousel();" +
+          "});" +
+        "</script>"
+    } else {
+        content += "<p>There was an error loading photos from Flickr.</p>"
+    };
   return content;
 };
 
