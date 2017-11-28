@@ -48,15 +48,12 @@ function jsonData(locationArray) {
         marker.thumbSource = "https://farm" + photo.farm + ".staticflickr.com/" +
           photo.server + "/" + photo.id + "_" + photo.secret + "_t.jpg";
         marker.flickLink = "https://www.flickr.com/photos/" + photo.owner +
-        "/" + photo.id});
+        "/" + photo.id};
     }).fail(function() {
       return "error"
     });
   };
 };
-
-// Call JSON function
-jsonData(initialMarkers);
 
 // Class for creating new marker list instances for each location
 var Marker = function(loc) {
@@ -67,6 +64,10 @@ var Marker = function(loc) {
 
 // *** ViewModels ***
 // ** ViewModel for map **
+
+// Call JSON function
+jsonData(initialMarkers);
+
 // Initialize map with markers
 function initMap() {
   var map = new google.maps.Map(document.getElementById("map"), {
