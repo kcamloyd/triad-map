@@ -106,7 +106,32 @@ initialMarkers.forEach(function(markerLocation){
 // ** View for map **
 // Join HTML to render place link and Flickr photos
 function infoContent(markerData, flickrData){
-  return '<a target=blank href="' + markerData.link + '">' + markerData.title + '</a>'
-}
+  var content =
+    "<a target=blank href='" + markerData.link + "'>" +
+      "<h3>" + markerData.title + "</h3>" +
+    "</a>" +
+    "<div class='carousel'>";
+  flickrData.forEach(function(photo){
+    content.append(
+      "<figure class='carousel-item'>" +
+        "<img src='" + photo.thumbSource + "'>" +
+        "<figcaption>" +
+          "<a target='blank' href='" + photo.flickrLink + "'>" +
+            "View this photo on Flickr" +
+          "</a>" +
+        "</figcaption>" +
+      "</figure>"
+    );
+  });
+  content.append(
+    "</div>" +
+    "<script type='text/javascript'>" +
+      "$(document).ready(function(){" +
+        "$('.carousel').carousel();" +
+      "});" +
+    "</script>"
+  );
+  return content
+};
 
 // ** View for list **
