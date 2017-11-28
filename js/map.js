@@ -67,14 +67,21 @@ function initMap() {
       "flickr.photos.search&api_key=013b067090a28369bb3bb907d41b07e9&tags=%22" +
       markerData.title + "%22&format=json";
 
-    var flickrDisplay = $.getJSON(flickrRequestUrl, function(data){
+    var flickrData = $.getJSON(flickrRequestUrl, function(data){
       var photoList = data.photos.photo;
       var photos = [];
-      // Create an array of display URLs for the first 10 photos returned
+      // Create an array of data for the first 10 photos returned
+      // Each array index is an object containing 2 URLs:
+      // thumbSource is the source for the image displayed in the slideshow
+      // flickrLink is the URL linking back to the photo on the Flickr site
+      // Both will be used in the view as content for the info window
       for (var i=0; i<10; i++){
         var photo = photoList[i];
-        photos.push("https://farm" + photo.farm + ".staticflickr.com/" +
-        photo.server + "/" + photo.id + "_" + photo.secret + "_t.jpg");
+        photos.push({"thumbSource": "https://farm" + photo.farm +
+          ".staticflickr.com/" + photo.server + "/" + photo.id + "_" +
+          photo.secret + "_t.jpg",
+          "flickrLink": "https://www.flickr.com/photos/" + photo.owner +
+          "/" + photo.id});
       };
       return photos;
     }).fail(function() {
@@ -83,7 +90,7 @@ function initMap() {
 
     // Displays info window when marker is clicked
     var info = new google.maps.InfoWindow({
-      content: infoContent(markerData, flickrDisplay)
+      content: infoContent(markerData, flickrData)
     });
     mark.addListener("click", function(){
       info.open(map, mark);
