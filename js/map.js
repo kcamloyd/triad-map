@@ -32,6 +32,32 @@ var initialMarkers = [
   }
 ]
 
+// Get Flickr photo data for each object in initialMarkers
+function jsonData(locationArray) {
+  for (var m=0; m<locationArray.length; m++){
+    var marker = initialMarkers[m];
+    var flickrRequestUrl = "https://api.flickr.com/services/rest/?method=" +
+      "flickr.photos.search&api_key=013b067090a28369bb3bb907d41b07e9&tags=%22" +
+      marker.title + "%22&format=json";
+
+    $.getJSON(flickrRequestUrl, function(data){
+      var photoList = data.photos.photo;
+      for (var i=0; i<10; i++){
+        var photo = photoList[i];
+        // Store photo URLs as new key/value pairs in the locations array
+        marker.thumbSource = "https://farm" + photo.farm + ".staticflickr.com/" +
+          photo.server + "/" + photo.id + "_" + photo.secret + "_t.jpg";
+        marker.flickLink = "https://www.flickr.com/photos/" + photo.owner +
+        "/" + photo.id});
+    }).fail(function() {
+      return "error"
+    });
+  };
+};
+
+// Call JSON function
+jsonData(initialMarkers);
+
 // Class for creating new marker list instances for each location
 var Marker = function(loc) {
   this.position = {lat: loc.lat, lng: loc.lng},
@@ -57,35 +83,9 @@ function initMap() {
       title: markerData.title
     });
 
-    // Get Flickr photo data
-    var flickrRequestUrl = "https://api.flickr.com/services/rest/?method=" +
-      "flickr.photos.search&api_key=013b067090a28369bb3bb907d41b07e9&tags=%22" +
-      markerData.title + "%22&format=json";
-
-    var flickrData = $.getJSON(flickrRequestUrl, function(data){
-      var photoList = data.photos.photo;
-      var photos = [];
-      // Create an array of data for the first 10 photos returned
-      // Each array index is an object containing 2 URLs:
-      // thumbSource is the source for the image displayed in the slideshow
-      // flickrLink is the URL linking back to the photo on the Flickr site
-      // Both will be used in the view as content for the info window
-      for (var i=0; i<10; i++){
-        var photo = photoList[i];
-        photos.push({"thumbSource": "https://farm" + photo.farm +
-          ".staticflickr.com/" + photo.server + "/" + photo.id + "_" +
-          photo.secret + "_t.jpg",
-          "flickrLink": "https://www.flickr.com/photos/" + photo.owner +
-          "/" + photo.id});
-      };
-      return photos;
-    }).fail(function() {
-      return "error"
-    });
-
     // Displays info window when marker is clicked
     var info = new google.maps.InfoWindow({
-      content: infoContent(markerData, flickrData)
+      content: infoContent(markerData)
     });
     mark.addListener("click", function(){
       info.open(map, mark);
@@ -105,13 +105,13 @@ initialMarkers.forEach(function(markerLocation){
 // *** View ***
 // ** View for map **
 // Join HTML to render place link and Flickr photos
-function infoContent(markerData, flickrData){
+function infoContent(markerData){
   var content =
     "<a target=blank href='" + markerData.link + "'>" +
       "<h3>" + markerData.title + "</h3>" +
     "</a>" +
     "<div class='carousel'>";
-  flickrData.forEach(function(photo){
+  photos.forEach(function(photo){
     content.append(
       "<figure class='carousel-item'>" +
         "<img src='" + photo.thumbSource + "'>" +
