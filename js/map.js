@@ -65,7 +65,7 @@ var Marker = function(loc) {
 // *** ViewModels ***
 // ** ViewModel for map **
 
-// Call JSON function
+// Call JSON function to add photo data to location data
 jsonData(initialMarkers);
 
 // Initialize map with markers
@@ -86,7 +86,7 @@ function initMap() {
 
     // Displays info window when marker is clicked
     var info = new google.maps.InfoWindow({
-      content: infoContent(markerData)
+      content: infoContent(initialMarkers)
     });
     mark.addListener("click", function(){
       info.open(map, mark);
@@ -105,33 +105,31 @@ initialMarkers.forEach(function(markerLocation){
 
 // *** View ***
 // ** View for map **
-// Join HTML to render place link and Flickr photos
-function infoContent(markerData){
+// Generate HTML to render place link and Flickr photos in info window
+function infoContent(placeData){
   var content =
-    "<a target=blank href='" + markerData.link + "'>" +
-      "<h3>" + markerData.title + "</h3>" +
+    "<a target=blank href='" + placeData.link + "'>" +
+      "<h3>" + placeData.title + "</h3>" +
     "</a>" +
     "<div class='carousel'>";
-  photos.forEach(function(photo){
-    content.append(
+  placeData.forEach(function(place){
+    content +=
       "<figure class='carousel-item'>" +
-        "<img src='" + photo.thumbSource + "'>" +
+        "<img src='" + place.thumbSource + "'>" +
         "<figcaption>" +
-          "<a target='blank' href='" + photo.flickrLink + "'>" +
+          "<a target='blank' href='" + place.flickrLink + "'>" +
             "View this photo on Flickr" +
           "</a>" +
         "</figcaption>" +
-      "</figure>"
-    );
+      "</figure>";
   });
-  content.append(
+  content +=
     "</div>" +
     "<script type='text/javascript'>" +
       "$(document).ready(function(){" +
         "$('.carousel').carousel();" +
       "});" +
-    "</script>"
-  );
+    "</script>";
   return content
 };
 
