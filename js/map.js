@@ -41,36 +41,6 @@ var Marker = function(loc) {
 
 // *** ViewModels ***
 // ** ViewModel for map **
-// Initialize map with markers
-function initMap() {
-  var map = new google.maps.Map(document.getElementById("map"), {
-    center: {lat: 36.109034, lng: -79.859619},
-    zoom: 11
-  });
-
-  function getMarker(marker){
-    // Displays marker on map
-    var mark = new google.maps.Marker({
-      position: {lat: marker.lat, lng: marker.lng},
-      map: map,
-      title: marker.title
-    });
-
-    // Displays info window when marker is clicked
-    var info = new google.maps.InfoWindow({
-      content: infoContent(marker)
-    });
-    mark.addListener("click", function(){
-      info.open(map, mark);
-    });
-  };
-
-  for (var m=0; m<initialMarkers.length; m++){
-    getMarker(initialMarkers[m]);
-  };
-
-};
-
 // Get Flickr photo data for each location
 function getAjax(marker) {
   // Set the Flickr api request url to search photos with the location name as a tag
@@ -102,6 +72,37 @@ function getAjax(marker) {
   });
 };
 
+// Initialize map with markers
+function initMap() {
+  var map = new google.maps.Map(document.getElementById("map"), {
+    center: {lat: 36.109034, lng: -79.859619},
+    zoom: 11
+  });
+
+  function getMarker(marker){
+    // Displays marker on map
+    var mark = new google.maps.Marker({
+      position: {lat: marker.lat, lng: marker.lng},
+      map: map,
+      title: marker.title
+    });
+
+    // Displays info window when marker is clicked
+    var info = new google.maps.InfoWindow({
+      content: infoContent(marker)
+    });
+    mark.addListener("click", function(){
+      info.open(map, mark);
+    });
+  };
+
+  for (var m=0; m<initialMarkers.length; m++){
+    getAjax(initialMarkers[m]);
+    getMarker(initialMarkers[m]);
+  };
+
+};
+
 
 // ** ViewModel for list **
 // Create observable array for displaying marker names in the sidebar list
@@ -114,11 +115,6 @@ initialMarkers.forEach(function(markerLocation){
 
 // *** View ***
 // ** View for map **
-// Generate photo links for each place
-for (var m=0; m<initialMarkers.length; m++){
-  getAjax(initialMarkers[m]);
-};
-
 // Generate HTML to render place link and Flickr photos in info window
 function infoContent(placeData){
   var content = "<a target=blank href='" + placeData.link + "'>" +
