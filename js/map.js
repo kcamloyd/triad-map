@@ -4,30 +4,40 @@ var initialMarkers = [
     title: "Old Salem",
     lat: 36.087144,
     lng: -80.242494,
+    county: "forsyth",
+    topics: ["history", "education"],
     link: "http://www.oldsalem.org/"
   },
   {
     title: "Greensboro Science Center",
     lat: 36.129938,
     lng: -79.834127,
+    county: "guilford",
+    topics: ["science", "nature", "animals"],
     link: "http://www.greensboroscience.org/"
   },
   {
     title: "Elon University",
     lat: 36.103408,
     lng: -79.501255,
+    county: "alamance",
+    topics: ["nature", "education"],
     link: "https://www.elon.edu/home/"
   },
   {
     title: "Haw River State Park",
     lat: 36.250866,
     lng: -79.756397,
+    county: "guilford",
+    topics: ["nature", "recreation"],
     link: "https://www.ncparks.gov/haw-river-state-park"
   },
   {
     title: "Greensboro Arboretum",
     lat: 36.07262,
     lng: -79.838784,
+    county: "guilford",
+    topics: ["nature"],
     link: "http://www.greensborobeautiful.org/gardens/greensboro_arboretum.php"
   }
 ]
