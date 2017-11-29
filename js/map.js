@@ -108,6 +108,37 @@ function initMap() {
 };
 
 
+// Initialize map with markers
+function initMap() {
+  var map = new google.maps.Map(document.getElementById("map"), {
+    center: {lat: 36.109034, lng: -79.859619},
+    zoom: 11
+  });
+
+  function getMarker(marker){
+    // Displays marker on map
+    var mark = new google.maps.Marker({
+      position: {lat: marker.lat, lng: marker.lng},
+      map: map,
+      title: marker.title
+    });
+
+    // Displays info window when marker is clicked
+    var info = new google.maps.InfoWindow({
+      content: infoContent(marker)
+    });
+    mark.addListener("click", function(){
+      info.open(map, mark);
+    });
+  };
+
+  for (var m=0; m<initialMarkers.length; m++){
+    getAjax(initialMarkers[m]);
+    getMarker(initialMarkers[m]);
+  };
+
+};
+
 
 // ** ViewModel for list **
 // Create observable array for displaying marker names in the sidebar list
