@@ -88,10 +88,10 @@ function initMap() {
     });
 
     // Displays info window when marker is clicked
-    var info = new google.maps.InfoWindow({
-      content: infoContent(marker)
-    });
     mark.addListener("click", function(){
+      var info = new google.maps.InfoWindow({
+        content: infoContent(marker)
+      });
       info.open(map, mark);
     });
   };
@@ -121,7 +121,6 @@ function infoContent(placeData){
       "<h5>" + placeData.title + "</h5>" +
     "</a>" +
     "<div class='carousel'>"
-    console.log(placeData.photos);
     if (placeData.photos) {
       placeData.photos.forEach(function(photo){
         content += "<figure class='carousel-item'>" +
