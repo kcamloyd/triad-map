@@ -92,6 +92,10 @@ function initMap() {
       var info = new google.maps.InfoWindow({
         content: infoContent(marker)
       });
+      mark.setAnimation(google.maps.Animation.BOUNCE);
+      setTimeout(function(){
+        mark.setAnimation(null);
+      }, 1400)
       info.open(map, mark);
     });
   };
@@ -100,7 +104,6 @@ function initMap() {
     getAjax(initialMarkers[m]);
     getMarker(initialMarkers[m]);
   };
-
 };
 
 
