@@ -136,7 +136,7 @@ function infoContent(placeData){
                     "</a>";
       });
       content += "</div>" +
-        "<a target='blank' href='" + placeData.flickrLink + "'>" +
+        "<a target='blank' href='" + placeData.morePhotos + "'>" +
           "<p class='center'>View more photos on Flickr</p>" +
         "</a>" +
         "</div>" +
