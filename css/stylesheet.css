@@ -1,10 +1,24 @@
 html,
-body {
+body,
+.tall,
+main {
   height: 100%;
-  margin: 0px;
-  padding: 0px;
+  margin: 0;
+  padding: 0;
 }
 
 #map {
   height: 100%;
+}
+
+#allRight {
+  padding-right: 0;
+}
+
+header {
+  text-align: center;
+}
+
+#headerRow {
+  margin-bottom: 0;
 }

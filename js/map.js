@@ -150,3 +150,7 @@ function infoContent(placeData){
 };
 
 // ** View for list **
+// Initialize select dropdown
+$(document).ready(function() {
+   $('select').material_select();
+ });
