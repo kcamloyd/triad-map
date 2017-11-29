@@ -55,13 +55,15 @@ function getAjax(marker) {
     url: flickrRequestUrl,
     success: function(response) {
       var photoList = response.photos.photo;
+      var hrefs = ["#one!", "#two!", "#three!", "#four!", "#five!", "#six!", "#seven!", "#eight!", "#nine!", "#ten!"]
       for (var i=0; i<10; i++){
         var photo = photoList[i];
         photoLinks.push(
           {"thumbSource": "https://farm" + photo.farm + ".staticflickr.com/" +
-            photo.server + "/" + photo.id + "_" + photo.secret + "_t.jpg",
+            photo.server + "/" + photo.id + "_" + photo.secret + "_q.jpg",
             "flickrLink": "https://www.flickr.com/photos/" + photo.owner +
-            "/" + photo.id}
+            "/" + photo.id,
+            "href": hrefs[i]}
         );
       };
       marker.photos = photoLinks;
@@ -90,7 +92,9 @@ function initMap() {
     // Displays info window when marker is clicked
     mark.addListener("click", function(){
       var info = new google.maps.InfoWindow({
-        content: infoContent(marker)
+        content: infoContent(marker),
+        minWidth: 350,
+        minHeight: 350
       });
       mark.setAnimation(google.maps.Animation.BOUNCE);
       setTimeout(function(){
@@ -120,29 +124,27 @@ initialMarkers.forEach(function(markerLocation){
 // ** View for map **
 // Generate HTML to render place link and Flickr photos in info window
 function infoContent(placeData){
-  var content = "<a target=blank href='" + placeData.link + "'>" +
-      "<h5>" + placeData.title + "</h5>" +
+  var content = "<div style='width: 300px; height: 270px;'>" +
+    "<a target='blank' href='" + placeData.link + "'>" +
+      "<p class='center'>" + placeData.title + "</p>" +
     "</a>" +
-    "<div class='carousel'>"
+  "<div class='carousel' style='width: 300px; height: 200px;'>";
     if (placeData.photos) {
       placeData.photos.forEach(function(photo){
-        content += "<figure class='carousel-item'>" +
-            "<img src='" + photo.thumbSource + "'>" +
-            "<figcaption>" +
-              "<a target='blank' href='" + photo.flickrLink + "'>" +
-                "View this photo on Flickr" +
-              "</a>" +
-            "</figcaption>" +
-          "</figure>"
+        content +=  "<a class='carousel-item' href='" + photo.href + "'>" +
+                      "<img src='" + photo.thumbSource + "'>" +
+                    "</a>";
       });
       content += "</div>" +
+        "<a target='blank' href='" + placeData.flickrLink + "'>" +
+          "<p class='center'>View more photos on Flickr</p>" +
+        "</a>" +
+        "</div>" +
         "<script type='text/javascript'>" +
-          "$(document).ready(function(){" +
-            "$('.carousel').carousel();" +
-          "});" +
-        "</script>"
+          "$(document).ready(function(){$('.carousel').carousel();});" +
+        "</script>";
     } else {
-        content += "<p>There was an error loading photos from Flickr.</p>"
+        content += "<p>There was an error loading photos from Flickr. Please refresh the page or contact the site administrator.</p>"
     };
   return content;
 };
