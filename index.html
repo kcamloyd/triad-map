@@ -11,23 +11,24 @@
   </head>
 
   <body>
-    <div class="row" id="headerRow">
-      <header class="col s12 card-panel green lighten-2">
+    <header class="row" id="headerRow">
+      <div class="col s12 card-panel green lighten-1 white-text">
         <h4>Places to go in the North Carolina Triad Area</h4>
-      </header>
-    </div>
+      </div>
+    </header>
 
-    <div class="row tall">
-      <aside class="col s12 m4 l3">
-        <div class="section search row">
+    <main class="row">
+      <aside class="col s12 m5 l4">
+<!-- TODO: THESE OPTIONS SHOULD BE CREATED DYNAMICALLY -->
+        <div class="section filter row">
           <div class="input-field col s12">
             <select multiple>
               <option value="" disabled selected>Select one or multiple</option>
-              <option value="Guilford">Guilford County</option>
-              <option value="Forsyth">Forsyth County</option>
-              <option value="Alamance">Alamance County</option>
+              <option value="education">Education</option>
+              <option value="nature">Nature</option>
+              <option value="science">Science</option>
             </select>
-            <label>Filter by County</label>
+            <label>Filter by Interest</label>
           </div>
         </div>
 
@@ -35,14 +36,19 @@
         </div>
 
         <div class="section flickrPhotos">
-          <p>This product uses the Flickr API but is not endorsed or certified by Flickr.</p>
         </div>
       </aside>
 
-      <main class="col s12 m8 l9" id="allRight">
+      <section class="col s12 m7 l8 tall">
         <div id="map"></div>
-      </main>
-    </div>
+      </section>
+    </main>
+
+    <footer class="row">
+      <div class="page-footer col s12 card-panel green lighten-1">
+        <p>This product uses the Flickr API but is not endorsed or certified by Flickr.</p>
+      </div>
+    </footer>
 
     <!-- Knockout framework -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
