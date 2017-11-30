@@ -67,8 +67,6 @@ function getAjax(marker) {
         photoLinks.push(
           {"thumbSource": "https://farm" + photo.farm + ".staticflickr.com/" +
             photo.server + "/" + photo.id + "_" + photo.secret + "_q.jpg",
-            "flickrLink": "https://www.flickr.com/photos/" + photo.owner +
-            "/" + photo.id,
             "href": hrefs[i]}
         );
       };
@@ -95,18 +93,20 @@ function initMap() {
       title: marker.title
     });
 
-    // Displays info window when marker is clicked
+    // Displays info window and flickr photos when marker is clicked
     mark.addListener("click", function(){
+      // Info window:
       var info = new google.maps.InfoWindow({
         content: infoContent(marker),
-        minWidth: 350,
-        minHeight: 350
       });
       mark.setAnimation(google.maps.Animation.BOUNCE);
       setTimeout(function(){
         mark.setAnimation(null);
       }, 1400)
       info.open(map, mark);
+
+      // Flickr photo carousel in sidebar:
+      showFlickrPhotos(marker);
     });
   };
 
@@ -144,24 +144,6 @@ function infoContent(placeData){
     "<a target='blank' href='" + placeData.link + "'>" +
       "<p class='center'>" + placeData.title + "</p>" +
     "</a>" +
-  "<div class='carousel' style='width: 300px; height: 200px;'>";
-    if (placeData.photos) {
-      placeData.photos.forEach(function(photo){
-        content +=  "<a class='carousel-item' href='" + photo.href + "'>" +
-                      "<img src='" + photo.thumbSource + "'>" +
-                    "</a>";
-      });
-      content += "</div>" +
-        "<a target='blank' href='" + placeData.morePhotos + "'>" +
-          "<p class='center'>View more photos on Flickr</p>" +
-        "</a>" +
-        "</div>" +
-        "<script type='text/javascript'>" +
-          "$(document).ready(function(){$('.carousel').carousel();});" +
-        "</script>";
-    } else {
-        content += "<p>There was an error loading photos from Flickr. Please refresh the page or contact the site administrator.</p>"
-    };
   return content;
 };
 
@@ -178,6 +160,34 @@ $(document).ready(function() {
 });
 
 // Generate initial list
-markers().forEach(function(location){
+markers().forEach(function(location) {
   $('.list').append("<li><a href='#'>" + location.title + "</a></li>");
-})
+});
+
+// Generate flickr photos view in sidebar
+function showFlickrPhotos(location) {
+  $('.flickrPhotos').innerHTML = '';
+
+  if (location.photos) {
+    var photoDisplay = "<div class='carousel' style='width: 300px; height: 200px;'>";
+    location.photos.forEach(function(photo){
+      photoDisplay +=  "<a class='carousel-item' href='" + photo.href + "'>" +
+                    "<img src='" + photo.thumbSource + "'>" +
+                  "</a>";
+    });
+    photoDisplay += "</div>" +
+      "<a target='blank' href='" + location.flickrLink + "'>" +
+        "<p class='center'>View more photos on Flickr</p>" +
+      "</a>" +
+      "<script type='text/javascript'>" +
+        "$(document).ready(function(){$('.carousel').carousel();});" +
+      "</script>";
+  } else {
+      var photoDisplay = "<p>There was an error loading photos from Flickr. " +
+        "Please refresh the page or <a target='blank' " +
+        "href='https://twitter.com/KCamLoyd'>contact the site " +
+        "administrator</a>.</p>"
+  };
+
+  $('.flickrPhotos').append(photoDisplay);
+}
