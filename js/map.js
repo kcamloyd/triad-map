@@ -184,3 +184,10 @@ function infoContent(placeData){
 $(document).ready(function() {
    $('select').material_select();
  });
+
+ // Iterate through interestTypes array to create selector options
+for (var i=0; i<interestTypes.length; i++){
+  var option = interestTypes[i];
+  $('select').append("<option value='" + option + "'>" +
+   option[0].toUpperCase() + option.slice(1) + "</option>");
+};
