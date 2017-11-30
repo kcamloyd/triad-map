@@ -127,7 +127,7 @@ function initMap() {
 };
 
 
-// ** ViewModel for list **
+// ** ViewModel for sidebar **
 // Create observable array for displaying marker names in the sidebar list
 var markers = ko.observableArray();
 // Create observable array to read all possible interest values (for selector)
@@ -174,8 +174,8 @@ function infoContent(placeData){
   return content;
 };
 
-// ** View for list **
-// Initialize select dropdown
+// ** View for sidebar **
+// Populate select dropdown
 $(document).ready(function() {
   // Iterate through interestTypes array to create selector options
   interestTypes().forEach(function(interest){
