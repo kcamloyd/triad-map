@@ -49,12 +49,11 @@ var Marker = function(loc) {
 // ** ViewModel for map **
 // Get Flickr photo data for each location
 function getAjax(marker) {
-  marker.flickrLink = "https://www.flickr.com/search/?tags=" +
-  marker.title + "&sort=interestingness-desc"
+  marker.flickrLink = "https://www.flickr.com/search/?tags=" + marker.title;
   // Set the Flickr api request url to search photos with the location name as a tag
   var flickrRequestUrl = "https://api.flickr.com/services/rest/?method=" +
     "flickr.photos.search&api_key=cd7a678487f7cec2b53ed11ba7a1de15&tags=" +
-    marker.title + "&sort=interestingness-desc&format=json&nojsoncallback=1";
+    marker.title + "&sort=relevance&format=json&nojsoncallback=1";
   // Create an empty array to temporarily store links for each photo returned by ajax call
   // Should also clear the array before the ajax call for the next location
   var photoLinks = [];
@@ -168,10 +167,9 @@ markers().forEach(function(location) {
 
 // Generate flickr photos view in sidebar
 function showFlickrPhotos(location) {
-  $('.flickrPhotos').innerHTML = '';
-
+  var photoDisplay = "<div class='flickr-photos col s12'>"
   if (location.photos) {
-    var photoDisplay = "<div class='carousel' style='width: 300px; height: 200px;'>";
+    photoDisplay += "<div class='carousel center' style='height: 200px; margin-top: 15px;'>";
     location.photos.forEach(function(photo){
       photoDisplay +=  "<a class='carousel-item' href='" + photo.href + "'>" +
                     "<img src='" + photo.thumbSource + "'>" +
@@ -184,12 +182,14 @@ function showFlickrPhotos(location) {
       "<script type='text/javascript'>" +
         "$(document).ready(function(){$('.carousel').carousel();});" +
       "</script>";
-  } else {
-      var photoDisplay = "<p>There was an error loading photos from Flickr. " +
-        "Please refresh the page or <a target='blank' " +
-        "href='https://twitter.com/KCamLoyd'>contact the site " +
-        "administrator</a>.</p>"
+  }
+  else {
+    photoDisplay += "<p>There was an error loading photos from Flickr. " +
+      "Please refresh the page or <a target='blank' " +
+      "href='https://twitter.com/KCamLoyd'>contact the site " +
+      "administrator</a>.</p>"
   };
+  photoDisplay += "</div>"
 
-  $('.flickrPhotos').append(photoDisplay);
+  $('.flickr-photos').replaceWith(photoDisplay);
 }
