@@ -5,48 +5,48 @@ var initialMarkers = [
     title: "Old Salem",
     lat: 36.087144,
     lng: -80.242494,
-    interest: ["history", "education"],
+    interests: ["history", "education"],
     link: "http://www.oldsalem.org/"
   },
   {
     title: "Greensboro Science Center",
     lat: 36.129938,
     lng: -79.834127,
-    interest: ["science", "nature", "animals"],
+    interests: ["science", "nature", "animals"],
     link: "http://www.greensboroscience.org/"
   },
   {
     title: "Elon University",
     lat: 36.103408,
     lng: -79.501255,
-    interest: ["nature", "education"],
+    interests: ["nature", "education"],
     link: "https://www.elon.edu/home/"
   },
   {
     title: "Haw River State Park",
     lat: 36.250866,
     lng: -79.756397,
-    interest: ["nature", "recreation"],
+    interests: ["nature", "recreation"],
     link: "https://www.ncparks.gov/haw-river-state-park"
   },
   {
     title: "Greensboro Arboretum",
     lat: 36.07262,
     lng: -79.838784,
-    interest: ["nature"],
+    interests: ["nature"],
     link: "http://www.greensborobeautiful.org/gardens/greensboro_arboretum.php"
   }
 ]
 
 // Filter by Interest options:
 // Values added to interest key in initialMarkers must be present here
-var interests = [
-  "history",
-  "education",
-  "science",
-  "nature", 
-  "animals",
-  "recreation"]
+// var interestTypes = [
+//   "history",
+//   "education",
+//   "science",
+//   "nature",
+//   "animals",
+//   "recreation"]
 
 // Class for creating new marker list instances for each location
 var Marker = function(loc) {
@@ -130,10 +130,24 @@ function initMap() {
 // ** ViewModel for list **
 // Create observable array for displaying marker names in the sidebar list
 var markers = ko.observableArray([]);
+// Create observable array to read all possible interest values (for selector)
+var interestTypes = ko.observableArray([]);
 
 initialMarkers.forEach(function(markerLocation){
   markers.push(new Marker(markerLocation));
+  addInterestTypes(markerLocation);
 });
+
+// Adds new values for interests in initialMarkers object to KO observable
+function addInterestTypes(markerLocation) {
+  var interests = markerLocation.interests;
+  for (var i=0; i<interests; i++) {
+    if (interestTypes.indexOf(interests[i]) === -1) {
+      interestTypes.push(interests[i]);
+    };
+  };
+};
+
 
 
 // *** View ***
