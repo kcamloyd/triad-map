@@ -19,3 +19,11 @@ header {
 .row {
   margin-bottom: 0;
 }
+
+.section {
+  padding: 0;
+}
+
+.list {
+  overflow: auto;
+}

@@ -38,16 +38,6 @@ var initialMarkers = [
   }
 ]
 
-// Filter by Interest options:
-// Values added to interest key in initialMarkers must be present here
-// var interestTypes = [
-//   "history",
-//   "education",
-//   "science",
-//   "nature",
-//   "animals",
-//   "recreation"]
-
 // Class for creating new marker list instances for each location
 var Marker = function(loc) {
   this.position = {lat: loc.lat, lng: loc.lng},
@@ -134,8 +124,9 @@ var markers = ko.observableArray();
 var interestTypes = ko.observableArray();
 
 initialMarkers.forEach(function(markerLocation){
+  // Populate markers observable array
   markers.push(new Marker(markerLocation));
-
+  // Populate interestTypes observable array
   var interests = markerLocation.interests;
   interests.forEach(function(interest){
     if (interestTypes().indexOf(interest)===-1) {
@@ -179,9 +170,14 @@ function infoContent(placeData){
 $(document).ready(function() {
   // Iterate through interestTypes array to create selector options
   interestTypes().forEach(function(interest){
-    $('select').append("<option value='" + interest + "'>" +
+    $('.filter').append("<option value='" + interest + "'>" +
      interest[0].toUpperCase() + interest.slice(1) + "</option>");
   });
   // Initialize selector (code from http://materializecss.com/forms.html#select-initialization)
-  $('select').material_select();
+  $('.filter').material_select();
 });
+
+// Generate initial list
+markers().forEach(function(location){
+  $('.list').append("<li><a href='#'>" + location.title + "</a></li>");
+})
