@@ -86,10 +86,18 @@ function getAjax(marker) {
 
 // Initialize map with markers
 function initMap() {
-  var map = new google.maps.Map(document.getElementById("map"), {
-    center: {lat: 36.109034, lng: -79.859619},
-    zoom: 10
-  });
+  try {
+    var map = new google.maps.Map(document.getElementById("map"), {
+      center: {lat: 36.109034, lng: -79.859619},
+      zoom: 10
+    });
+  }
+  catch (err) {
+    document.getElementById("map").innerHTML = "<p>There was an error retreiving data from the " +
+      "Google Maps API. Please refresh the page or <a target='blank' " +
+      "href='https://twitter.com/KCamLoyd'>contact the site " +
+      "administrator</a>.</p>"
+  }
 
   function getMarker(marker){
     // Displays marker on map
@@ -111,7 +119,7 @@ function initMap() {
       }, 1400)
       info.open(map, mark);
 
-      // Flickr photo carousel in sidebar:
+      // Show flickr photo carousel in sidebar on click:
       showFlickrPhotos(marker);
     });
   };
@@ -130,6 +138,7 @@ function initMap() {
 
     map.fitBounds(triad);
 };
+
 
 
 // ** ViewModel for sidebar **
