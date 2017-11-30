@@ -49,6 +49,8 @@ var Marker = function(loc) {
 // ** ViewModel for map **
 // Get Flickr photo data for each location
 function getAjax(marker) {
+  marker.flickrLink = "https://www.flickr.com/search/?tags=" +
+  marker.title + "&sort=interestingness-desc"
   // Set the Flickr api request url to search photos with the location name as a tag
   var flickrRequestUrl = "https://api.flickr.com/services/rest/?method=" +
     "flickr.photos.search&api_key=cd7a678487f7cec2b53ed11ba7a1de15&tags=" +
@@ -143,7 +145,7 @@ function infoContent(placeData){
   var content = "<div style='width: 300px; height: 270px;'>" +
     "<a target='blank' href='" + placeData.link + "'>" +
       "<p class='center'>" + placeData.title + "</p>" +
-    "</a>" +
+    "</a>";
   return content;
 };
 
