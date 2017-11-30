@@ -6,35 +6,40 @@ var initialMarkers = [
     lat: 36.087144,
     lng: -80.242494,
     interests: ["history", "education"],
-    link: "http://www.oldsalem.org/"
+    link: "http://www.oldsalem.org/",
+    description: "Experience early American history in the unique Moravian settlement of Salem. Original structures, gardens, tours, artifacts, hands-on workshops, fun family events and shopping."
   },
   {
     title: "Greensboro Science Center",
     lat: 36.129938,
     lng: -79.834127,
     interests: ["science", "nature", "animals"],
-    link: "http://www.greensboroscience.org/"
+    link: "http://www.greensboroscience.org/",
+    description: "The Greensboro Science Center is committed to excellence in science education by providing the community with a dynamic, experiential and family-focused attraction designed to inspire scientific curiosity and encourage personal discovery about life and the natural world."
   },
   {
     title: "Elon University",
     lat: 36.103408,
     lng: -79.501255,
     interests: ["nature", "education"],
-    link: "https://www.elon.edu/home/"
+    link: "https://www.elon.edu/home/",
+    description: "Elon is a selective, mid-sized private university renowned as a national model for engaged and experiential learning. The campus is a designated botanical garden and has several great spots to read or study."
   },
   {
     title: "Haw River State Park",
     lat: 36.250866,
     lng: -79.756397,
     interests: ["nature", "recreation"],
-    link: "https://www.ncparks.gov/haw-river-state-park"
+    link: "https://www.ncparks.gov/haw-river-state-park",
+    description: "Located in the northern Piedmont Triad region, picturesque terrain makes Haw River State Park the perfect place to connect with nature. Housed within this natural setting is The Summit Environmental Education and Conference Center, N.C. State Park’s first residential environmental education center. Along with environmental education programming, The Summit Center offers conference center facilities for groups ranging in size from 10 to 180."
   },
   {
     title: "Greensboro Arboretum",
     lat: 36.07262,
     lng: -79.838784,
     interests: ["nature"],
-    link: "http://www.greensborobeautiful.org/gardens/greensboro_arboretum.php"
+    link: "http://www.greensborobeautiful.org/gardens/greensboro_arboretum.php",
+    description: "This 17-acre site features 14 plant collections, special display gardens and distinct structural features. The extensive variety of plants offers rich educational opportunities for children and adults, landscape designers, and homeowners."
   }
 ]
 
@@ -140,11 +145,12 @@ initialMarkers.forEach(function(markerLocation){
 // *** View ***
 // ** View for map **
 // Generate HTML to render place link and Flickr photos in info window
-function infoContent(placeData){
-  var content = "<div style='width: 300px; height: 270px;'>" +
-    "<a target='blank' href='" + placeData.link + "'>" +
-      "<p class='center'>" + placeData.title + "</p>" +
-    "</a>";
+function infoContent(location){
+  var content =
+    "<a target='blank' href='" + location.link + "'>" +
+      "<h5 class='center'>" + location.title + "</h5>" +
+    "</a>" +
+    "<p>" + location.description + "</p>";
   return content;
 };
 
