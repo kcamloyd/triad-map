@@ -129,25 +129,20 @@ function initMap() {
 
 // ** ViewModel for list **
 // Create observable array for displaying marker names in the sidebar list
-var markers = ko.observableArray([]);
+var markers = ko.observableArray();
 // Create observable array to read all possible interest values (for selector)
-var interestTypes = ko.observableArray([]);
+var interestTypes = ko.observableArray();
 
 initialMarkers.forEach(function(markerLocation){
   markers.push(new Marker(markerLocation));
-  addInterestTypes(markerLocation);
-});
 
-// Adds new values for interests in initialMarkers object to KO observable
-function addInterestTypes(markerLocation) {
   var interests = markerLocation.interests;
-  for (var i=0; i<interests; i++) {
-    if (interestTypes.indexOf(interests[i]) === -1) {
-      interestTypes.push(interests[i]);
-    };
-  };
-};
-
+  interests.forEach(function(interest){
+    if (interestTypes().indexOf(interest)===-1) {
+      interestTypes().push(interest);
+    }
+  });
+});
 
 
 // *** View ***
