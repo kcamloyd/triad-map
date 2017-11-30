@@ -88,7 +88,7 @@ function getAjax(marker) {
 function initMap() {
   var map = new google.maps.Map(document.getElementById("map"), {
     center: {lat: 36.109034, lng: -79.859619},
-    zoom: 11
+    zoom: 10
   });
 
   function getMarker(marker){
@@ -120,6 +120,15 @@ function initMap() {
     getAjax(initialMarkers[m]);
     getMarker(initialMarkers[m]);
   };
+
+    var triad = new google.maps.LatLngBoundsLiteral({
+      south: 35.762115,
+      west: -80.533905,
+      north: 36.333934,
+      east: -79.271851
+    });
+
+    map.fitBounds(triad);
 };
 
 
