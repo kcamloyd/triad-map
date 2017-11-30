@@ -52,7 +52,7 @@ function getAjax(marker) {
   // Set the Flickr api request url to search photos with the location name as a tag
   var flickrRequestUrl = "https://api.flickr.com/services/rest/?method=" +
     "flickr.photos.search&api_key=cd7a678487f7cec2b53ed11ba7a1de15&tags=" +
-    marker.title + "&format=json&nojsoncallback=1";
+    marker.title + "&sort=interestingness-desc&format=json&nojsoncallback=1";
   // Create an empty array to temporarily store links for each photo returned by ajax call
   // Should also clear the array before the ajax call for the next location
   var photoLinks = [];
