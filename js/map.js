@@ -177,12 +177,11 @@ function infoContent(placeData){
 // ** View for list **
 // Initialize select dropdown
 $(document).ready(function() {
-   $('select').material_select();
- });
-
- // Iterate through interestTypes array to create selector options
-for (var i=0; i<interestTypes.length; i++){
-  var option = interestTypes[i];
-  $('select').append("<option value='" + option + "'>" +
-   option[0].toUpperCase() + option.slice(1) + "</option>");
-};
+  // Iterate through interestTypes array to create selector options
+  interestTypes().forEach(function(interest){
+    $('select').append("<option value='" + interest + "'>" +
+     interest[0].toUpperCase() + interest.slice(1) + "</option>");
+  });
+  // Initialize selector (code from http://materializecss.com/forms.html#select-initialization)
+  $('select').material_select();
+});
