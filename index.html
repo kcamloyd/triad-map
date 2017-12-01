@@ -30,9 +30,12 @@
         </div>
 
         <div class="section row">
-          <ul class="list col s12">
+          <div class="col s12">
             <label class="section-label">Locations</label>
-          </ul>
+            <ul class="list" data-bind="foreach: locationList">
+              <li data-bind="text: title, click: $parent.openInfoWindow"></li>
+            </ul>
+          </div>
         </div>
 
         <div class="divider">

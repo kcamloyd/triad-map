@@ -1,6 +1,5 @@
 // *** Model ***
-// Markers that appear when map is launched:
-var initialMarkers = [
+var initialLocations = [
   {
     title: "Old Salem",
     lat: 36.087144,
@@ -43,22 +42,29 @@ var initialMarkers = [
   }
 ]
 
-// Class for creating new marker list instances for each location
-var Marker = function(loc) {
-  this.position = {lat: loc.lat, lng: loc.lng},
-  this.title = loc.title
-};
+// Class for creating new knockout observable location
+var Location = function(data) {
+  this.title = data.title;
+  this.lat = data.lat;
+  this.lng = data.lng;
+  this.position = ko.computed(function() {
+    return {lat: this.lat, lng: this.lng};
+  }, this);
+  this.interests = data.interests;
+  this.link = data.link;
+  this.description = data.description;
+}
 
 
 // *** ViewModels ***
 // ** ViewModel for map **
 // Get Flickr photo data for each location
-function getAjax(marker) {
-  marker.flickrLink = "https://www.flickr.com/search/?tags=" + marker.title;
+function getAjax(location) {
+  location.flickrLink = "https://www.flickr.com/search/?tags=" + location.title;
   // Set the Flickr api request url to search photos with the location name as a tag
   var flickrRequestUrl = "https://api.flickr.com/services/rest/?method=" +
     "flickr.photos.search&api_key=cd7a678487f7cec2b53ed11ba7a1de15&tags=" +
-    marker.title + "&sort=relevance&format=json&nojsoncallback=1";
+    location.title + "&sort=relevance&format=json&nojsoncallback=1";
   // Create an empty array to temporarily store links for each photo returned by ajax call
   // Should also clear the array before the ajax call for the next location
   var photoLinks = [];
@@ -76,7 +82,7 @@ function getAjax(marker) {
             "href": hrefs[i]}
         );
       };
-      marker.photos = photoLinks;
+      location.photos = photoLinks;
     },
     error: function() {
       console.log("Error in ajax call")
@@ -85,9 +91,11 @@ function getAjax(marker) {
 };
 
 // Initialize map with markers
+var map;
+
 function initMap() {
   try {
-    var map = new google.maps.Map(document.getElementById("map"), {
+    map = new google.maps.Map(document.getElementById("map"), {
       center: {lat: 36.109034, lng: -79.859619},
       zoom: 10
     });
@@ -124,45 +132,64 @@ function initMap() {
     });
   };
 
-  for (var m=0; m<initialMarkers.length; m++){
-    getAjax(initialMarkers[m]);
-    getMarker(initialMarkers[m]);
+  for (var l=0; l<initialLocations.length; l++){
+    getAjax(initialLocations[l]);
+    getMarker(initialLocations[l]);
   };
 
-    var triad = new google.maps.LatLngBoundsLiteral({
-      south: 35.762115,
-      west: -80.533905,
-      north: 36.333934,
-      east: -79.271851
-    });
-
-    map.fitBounds(triad);
+    // var triad = new google.maps.LatLngBoundsLiteral({
+    //   south: 35.762115,
+    //   west: -80.533905,
+    //   north: 36.333934,
+    //   east: -79.271851
+    // });
+    //
+    // map.fitBounds(triad);
 };
 
 
-
 // ** ViewModel for sidebar **
-// Create observable array for displaying marker names in the sidebar list
-var markers = ko.observableArray();
-// Create observable array to read all possible interest values (for selector)
-var interestTypes = ko.observableArray();
+// // Create observable array for displaying marker names in the sidebar list
+// var markers = ko.observableArray();
+// // Create observable array to read all possible interest values (for selector)
+// var interestTypes = ko.observableArray();
+//
+// initialMarkers.forEach(function(markerLocation){
+//   // Populate markers observable array
+//   markers.push(new Marker(markerLocation));
+//   // Populate interestTypes observable array
+//   var interests = markerLocation.interests;
+//   interests.forEach(function(interest){
+//     if (interestTypes().indexOf(interest)===-1) {
+//       interestTypes().push(interest);
+//     }
+//   });
+// });
 
-initialMarkers.forEach(function(markerLocation){
-  // Populate markers observable array
-  markers.push(new Marker(markerLocation));
-  // Populate interestTypes observable array
-  var interests = markerLocation.interests;
-  interests.forEach(function(interest){
-    if (interestTypes().indexOf(interest)===-1) {
-      interestTypes().push(interest);
-    }
+var ListViewModel = function() {
+  var self = this;
+
+  this.locationList = ko.observableArray([]);
+
+  initialLocations.forEach(function(locationItem){
+    self.locationList.push(new Location(locationItem))
   });
-});
+
+  // this.currentLocations = ko.observableArray(this.locationList()[indexes of selected filters])
+  // this.currentLocations should initially be set to show all locations
+
+  this.openInfoWindow = function(clickedLocation) {
+    // self.currentLocations(clickedLocation);
+    console.log("this will open the info window on the map");
+  };
+}
+
+ko.applyBindings(new ListViewModel());
 
 
 // *** View ***
 // ** View for map **
-// Generate HTML to render place link and Flickr photos in info window
+// Generate HTML to render place link and description in info window
 function infoContent(location){
   var content =
     "<a target='blank' href='" + location.link + "'>" +
@@ -185,9 +212,9 @@ $(document).ready(function() {
 });
 
 // Generate initial list
-markers().forEach(function(location) {
-  $('.list').append("<li><a href='#'>" + location.title + "</a></li>");
-});
+// markers().forEach(function(location) {
+//   $('.list').append("<li><a href='#'>" + location.title + "</a></li>");
+// });
 
 // Generate flickr photos view in sidebar
 function showFlickrPhotos(location) {
