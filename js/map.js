@@ -4,7 +4,7 @@ var initialLocations = [
     title: "Old Salem",
     lat: 36.087144,
     lng: -80.242494,
-    interests: ["history", "education"],
+    interests: ["History", "Education"],
     link: "http://www.oldsalem.org/",
     description: "Experience early American history in the unique Moravian settlement of Salem. Original structures, gardens, tours, artifacts, hands-on workshops, fun family events and shopping."
   },
@@ -12,7 +12,7 @@ var initialLocations = [
     title: "Greensboro Science Center",
     lat: 36.129938,
     lng: -79.834127,
-    interests: ["science", "nature", "animals"],
+    interests: ["Science", "Nature", "Animals"],
     link: "http://www.greensboroscience.org/",
     description: "The Greensboro Science Center is committed to excellence in science education by providing the community with a dynamic, experiential and family-focused attraction designed to inspire scientific curiosity and encourage personal discovery about life and the natural world."
   },
@@ -20,7 +20,7 @@ var initialLocations = [
     title: "Elon University",
     lat: 36.103408,
     lng: -79.501255,
-    interests: ["nature", "education"],
+    interests: ["Nature", "Education"],
     link: "https://www.elon.edu/home/",
     description: "Elon is a selective, mid-sized private university renowned as a national model for engaged and experiential learning. The campus is a designated botanical garden and has several great spots to read or study."
   },
@@ -28,7 +28,7 @@ var initialLocations = [
     title: "Haw River State Park",
     lat: 36.250866,
     lng: -79.756397,
-    interests: ["nature", "recreation"],
+    interests: ["Nature", "Recreation"],
     link: "https://www.ncparks.gov/haw-river-state-park",
     description: "Located in the northern Piedmont Triad region, picturesque terrain makes Haw River State Park the perfect place to connect with nature. Housed within this natural setting is The Summit Environmental Education and Conference Center, N.C. State Park’s first residential environmental education center. Along with environmental education programming, The Summit Center offers conference center facilities for groups ranging in size from 10 to 180."
   },
@@ -36,13 +36,13 @@ var initialLocations = [
     title: "Greensboro Arboretum",
     lat: 36.07262,
     lng: -79.838784,
-    interests: ["nature"],
+    interests: ["Nature"],
     link: "http://www.greensborobeautiful.org/gardens/greensboro_arboretum.php",
     description: "This 17-acre site features 14 plant collections, special display gardens and distinct structural features. The extensive variety of plants offers rich educational opportunities for children and adults, landscape designers, and homeowners."
   }
 ]
 
-// Class for creating new knockout observable location
+// Class for creating new knockout observable locations
 var Location = function(data) {
   this.title = data.title;
   this.lat = data.lat;
@@ -149,30 +149,25 @@ function initMap() {
 
 
 // ** ViewModel for sidebar **
-// // Create observable array for displaying marker names in the sidebar list
-// var markers = ko.observableArray();
-// // Create observable array to read all possible interest values (for selector)
-// var interestTypes = ko.observableArray();
-//
-// initialMarkers.forEach(function(markerLocation){
-//   // Populate markers observable array
-//   markers.push(new Marker(markerLocation));
-//   // Populate interestTypes observable array
-//   var interests = markerLocation.interests;
-//   interests.forEach(function(interest){
-//     if (interestTypes().indexOf(interest)===-1) {
-//       interestTypes().push(interest);
-//     }
-//   });
-// });
-
 var ListViewModel = function() {
   var self = this;
 
+  // Create observable array to hold all location items
   this.locationList = ko.observableArray([]);
+  // Create observable array to read all possible interest values (for selector)
+  this.interestTypes = ko.observableArray(["Display All"]);
 
   initialLocations.forEach(function(locationItem){
-    self.locationList.push(new Location(locationItem))
+    // Populate locationList with all locations
+    self.locationList.push(new Location(locationItem));
+    // Populate interestTypes array (avoid duplicates)
+    locationItem.interests.forEach(function(interest) {
+      // If interest is not found in the interestTypes array
+      if (self.interestTypes.indexOf(interest) === -1) {
+        // Add the interest value to the interestTypes array
+        self.interestTypes.push(interest);
+      };
+    });
   });
 
   // this.currentLocations = ko.observableArray(this.locationList()[indexes of selected filters])
@@ -181,6 +176,15 @@ var ListViewModel = function() {
   this.openInfoWindow = function(clickedLocation) {
     // self.currentLocations(clickedLocation);
     console.log("this will open the info window on the map");
+  };
+
+  // Initialize select dropdown
+  this.initSelector = function(element, interest) {
+    // If all list items are present:
+    if (self.interestTypes.indexOf(interest) === self.interestTypes().length - 1) {
+      // Initialize selector (code from http://materializecss.com/forms.html#select-initialization)
+      $('.filter').material_select();
+    };
   };
 }
 
@@ -200,21 +204,7 @@ function infoContent(location){
 };
 
 // ** View for sidebar **
-// Populate select dropdown
-$(document).ready(function() {
-  // Iterate through interestTypes array to create selector options
-  interestTypes().forEach(function(interest){
-    $('.filter').append("<option value='" + interest + "'>" +
-     interest[0].toUpperCase() + interest.slice(1) + "</option>");
-  });
-  // Initialize selector (code from http://materializecss.com/forms.html#select-initialization)
-  $('.filter').material_select();
-});
 
-// Generate initial list
-// markers().forEach(function(location) {
-//   $('.list').append("<li><a href='#'>" + location.title + "</a></li>");
-// });
 
 // Generate flickr photos view in sidebar
 function showFlickrPhotos(location) {

@@ -22,8 +22,8 @@
 
         <div class="section row">
           <div class="input-field col s12">
-            <select class="filter" multiple>
-              <option value="" disabled selected>Select one or multiple</option>
+            <select class="filter" multiple data-bind="foreach: {data: interestTypes, afterRender: initSelector}">
+              <option data-bind="attr: {value: $data}, text: $data"></option>
             </select>
             <label>Filter by Interest</label>
           </div>
