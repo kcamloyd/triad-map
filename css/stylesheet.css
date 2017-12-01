@@ -27,3 +27,21 @@ header {
 .list {
   overflow: auto;
 }
+
+.list > li {
+  color: #039be5;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.list > li:hover {
+  color: #66bb6a;
+}
+
+a {
+  text-decoration: underline;
+}
+
+a:hover {
+  color: #66bb6a;
+}
