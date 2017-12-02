@@ -163,11 +163,21 @@ var ListViewModel = function() {
   // Create observable array to display filtered location list
   this.currentLocations = ko.observableArray([]);
 
-  // Set initial currentLocations value to all locations
-  this.currentLocations = this.locationList;
-
   // Declare KO observable to read search field input
   this.searchTerm = ko.observable("");
+
+  // Read searchTerm and filter currentLocations
+  this.locationList().forEach(function(locationItem){
+    if (this.searchTerm === "") {
+      // Set initial currentLocations value to all locations
+      this.currentLocations = this.locationList;
+    }
+    // If the search term (case insensitive) is found in the location title:
+    else if (locationItem.title.search(/this.searchTerm()/i) != -1) {
+      // Add the location to currentLocations
+      this.currentLocations.push(locationItem);
+    };
+  });
 
   // TODO: write the rest of this function:
   this.openInfoWindow = function(clickedLocation) {
