@@ -166,6 +166,8 @@ var ListViewModel = function() {
   // Set initial currentLocations value to all locations
   this.currentLocations = this.locationList;
 
+  this.searchTerm = ko.observable("");
+
 // TODO: write the rest of this function:
   this.openInfoWindow = function(clickedLocation) {
     // self.currentLocations(clickedLocation);
