@@ -166,9 +166,10 @@ var ListViewModel = function() {
   // Set initial currentLocations value to all locations
   this.currentLocations = this.locationList;
 
+  // Declare KO observable to read search field input
   this.searchTerm = ko.observable("");
 
-// TODO: write the rest of this function:
+  // TODO: write the rest of this function:
   this.openInfoWindow = function(clickedLocation) {
     // self.currentLocations(clickedLocation);
     console.log("this will open the info window on the map");
