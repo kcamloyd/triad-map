@@ -171,7 +171,7 @@ var ListViewModel = function() {
     // self.currentLocations(clickedLocation);
     console.log("this will open the info window on the map");
   };
-
+};
 ko.applyBindings(new ListViewModel());
 
 
@@ -215,4 +215,4 @@ function showFlickrPhotos(location) {
   photoDisplay += "</div>"
 
   $('.flickr-photos').replaceWith(photoDisplay);
-}
+};
