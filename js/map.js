@@ -173,6 +173,7 @@ var ListViewModel = function() {
   // this.currentLocations = ko.observableArray(this.locationList()[indexes of selected filters])
   // this.currentLocations should initially be set to show all locations
 
+// TODO: write the rest of this function:
   this.openInfoWindow = function(clickedLocation) {
     // self.currentLocations(clickedLocation);
     console.log("this will open the info window on the map");
@@ -204,8 +205,6 @@ function infoContent(location){
 };
 
 // ** View for sidebar **
-
-
 // Generate flickr photos view in sidebar
 function showFlickrPhotos(location) {
   var photoDisplay = "<div class='flickr-photos col s12'>"
