@@ -22,10 +22,8 @@
 
         <div class="section row">
           <div class="input-field col s12">
-            <select class="filter" multiple data-bind="foreach: {data: interestTypes, afterRender: initSelector}">
-              <option data-bind="attr: {value: $data}, text: $data"></option>
-            </select>
-            <label>Filter by Interest</label>
+            <input id="search" type="text" class="validate">
+            <label for="search">Search by place name</lable>
           </div>
         </div>
 
