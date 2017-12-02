@@ -154,40 +154,23 @@ var ListViewModel = function() {
 
   // Create observable array to hold all location items
   this.locationList = ko.observableArray([]);
-  // Create observable array to read all possible interest values (for selector)
-  this.interestTypes = ko.observableArray(["Display All"]);
 
   initialLocations.forEach(function(locationItem){
     // Populate locationList with all locations
     self.locationList.push(new Location(locationItem));
-    // Populate interestTypes array (avoid duplicates)
-    locationItem.interests.forEach(function(interest) {
-      // If interest is not found in the interestTypes array
-      if (self.interestTypes.indexOf(interest) === -1) {
-        // Add the interest value to the interestTypes array
-        self.interestTypes.push(interest);
-      };
-    });
   });
 
-  // this.currentLocations = ko.observableArray(this.locationList()[indexes of selected filters])
-  // this.currentLocations should initially be set to show all locations
+  // Create observable array to display filtered location list
+  this.currentLocations = ko.observableArray([]);
+
+  // Set initial currentLocations value to all locations
+  this.currentLocations = this.locationList;
 
 // TODO: write the rest of this function:
   this.openInfoWindow = function(clickedLocation) {
     // self.currentLocations(clickedLocation);
     console.log("this will open the info window on the map");
   };
-
-  // Initialize select dropdown
-  this.initSelector = function(element, interest) {
-    // If all list items are present:
-    if (self.interestTypes.indexOf(interest) === self.interestTypes().length - 1) {
-      // Initialize selector (code from http://materializecss.com/forms.html#select-initialization)
-      $('.filter').material_select();
-    };
-  };
-}
 
 ko.applyBindings(new ListViewModel());
 
