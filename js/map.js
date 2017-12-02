@@ -168,14 +168,18 @@ var ListViewModel = function() {
 
   // Read searchTerm and filter currentLocations
   this.locationList().forEach(function(locationItem){
-    if (this.searchTerm === "") {
+    // Make lowercase copies of location titles and search term for matching
+    var title = locationItem.title.toLowerCase();
+    var search = self.searchTerm().toLowerCase();
+    // If no filter is applied:
+    if (self.searchTerm() === "") {
       // Set initial currentLocations value to all locations
-      this.currentLocations = this.locationList;
+      self.currentLocations = self.locationList;
     }
-    // If the search term (case insensitive) is found in the location title:
-    else if (locationItem.title.search(/this.searchTerm()/i) != -1) {
+    // If the search term is found in the location title:
+    else if (title.indexOf(search) != -1) {
       // Add the location to currentLocations
-      this.currentLocations.push(locationItem);
+      self.currentLocations.push(locationItem);
     };
   });
 
