@@ -136,15 +136,6 @@ function initMap() {
     getAjax(initialLocations[l]);
     getMarker(initialLocations[l]);
   };
-
-    // var triad = new google.maps.LatLngBoundsLiteral({
-    //   south: 35.762115,
-    //   west: -80.533905,
-    //   north: 36.333934,
-    //   east: -79.271851
-    // });
-    //
-    // map.fitBounds(triad);
 };
 
 
