@@ -22,7 +22,9 @@
 
         <div class="section row">
           <div class="input-field col s12">
-            <input id="search" type="text" data-bind="textInput: searchTerm">
+            <input type="search"
+              data-bind="value: query, valueUpdate: 'keyup'"
+              autocomplete:"off">
             <label for="search">Search by place name</lable>
           </div>
         </div>
