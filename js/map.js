@@ -151,6 +151,21 @@ var ListViewModel = function() {
     self.locationList.push(new Location(locationItem));
   });
 
+  // Filter code source: https://opensoul.org/2011/06/23/live-search-with-knockoutjs/
+  this.query = ko.observable("")
+
+  this.search = function(value) {
+    self.locationList.removeAll();
+
+    for(var l in initialLocations) {
+      if(initialLocations[l].title.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+        self.locationList.push(initialLocations[l])
+      };
+    };
+  };
+
+  this.query.subscribe(this.search);
+
   // // Create observable array to display filtered location list
   // this.currentLocations = ko.observableArray([]);
   //
