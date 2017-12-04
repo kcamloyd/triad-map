@@ -40,24 +40,8 @@ var initialLocations = [
     link: "http://www.greensborobeautiful.org/gardens/greensboro_arboretum.php",
     description: "This 17-acre site features 14 plant collections, special display gardens and distinct structural features. The extensive variety of plants offers rich educational opportunities for children and adults, landscape designers, and homeowners."
   }
-]
+];
 
-// Class for creating new knockout observable locations
-var Location = function(data) {
-  this.title = data.title;
-  this.lat = data.lat;
-  this.lng = data.lng;
-  this.position = ko.computed(function() {
-    return {lat: this.lat, lng: this.lng};
-  }, this);
-  this.interests = data.interests;
-  this.link = data.link;
-  this.description = data.description;
-}
-
-
-// *** ViewModels ***
-// ** ViewModel for map **
 // Get Flickr photo data for each location
 function getAjax(location) {
   location.flickrLink = "https://www.flickr.com/search/?tags=" + location.title;
@@ -66,7 +50,7 @@ function getAjax(location) {
     "flickr.photos.search&api_key=cd7a678487f7cec2b53ed11ba7a1de15&tags=" +
     location.title + "&sort=relevance&format=json&nojsoncallback=1";
   // Create an empty array to temporarily store links for each photo returned by ajax call
-  // Should also clear the array before the ajax call for the next location
+  // Also clears the array before the ajax call for the next location
   var photoLinks = [];
 
   $.ajax({
@@ -87,6 +71,27 @@ function getAjax(location) {
   });
 };
 
+initialLocations.forEach(function(location) {
+  getAjax(location);
+})
+
+// Class for creating new knockout observable locations
+var Location = function(data) {
+  this.title = data.title;
+  this.lat = data.lat;
+  this.lng = data.lng;
+  this.position = ko.computed(function() {
+    return {lat: this.lat, lng: this.lng};
+  }, this);
+  this.interests = data.interests;
+  this.link = data.link;
+  this.description = data.description;
+  this.photoLinks = data.photoLinks;
+}
+
+
+// *** ViewModels ***
+// ** ViewModel for map **
 // Initialize map with markers
 var map, getMarker, clearMarker, showMarker;
 
