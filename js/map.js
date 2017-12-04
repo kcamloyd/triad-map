@@ -125,6 +125,14 @@ function initMap() {
   initialLocations.forEach(function(location) {
     getMarker(location);
   });
+}; // End initMap
+
+// Error handling for Google Map API
+function mapError() {
+  document.getElementById("map").innerHTML = "<p>There was an error retreiving data from the " +
+      "Google Maps API. Please refresh the page or <a target='blank' " +
+      "href='https://twitter.com/KCamLoyd'>contact the site " +
+      "administrator</a>.</p>"
 };
 
 // ** ViewModel for sidebar **
