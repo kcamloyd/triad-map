@@ -83,9 +83,6 @@ function getAjax(location) {
         );
       };
       location.photos = photoLinks;
-    },
-    error: function() {
-      console.log("Error in ajax call")
     }
   });
 };
