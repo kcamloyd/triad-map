@@ -91,7 +91,7 @@ function getAjax(location) {
 };
 
 // Initialize map with markers
-var map;
+var map, mark;
 
 function initMap() {
   try {
@@ -106,15 +106,21 @@ function initMap() {
       "href='https://twitter.com/KCamLoyd'>contact the site " +
       "administrator</a>.</p>"
   }
+
+  function getMarker(marker){
+    // Displays marker on map
+    var mark = new google.maps.Marker({
+      position: {lat: marker.lat, lng: marker.lng},
+      map: map,
+      title: marker.title
+    });
+  };
+
+  for (var l=0; l<initialLocations.length; l++){
+    getMarker(initialLocations[l]);
+  };
 };
 
-function getMarker(marker){
-  // Displays marker on map
-  var mark = new google.maps.Marker({
-    position: {lat: marker.lat, lng: marker.lng},
-    map: map,
-    title: marker.title
-  });
 
   // Displays info window and flickr photos when marker is clicked
   mark.addListener("click", function(){
@@ -131,11 +137,9 @@ function getMarker(marker){
     // Show flickr photo carousel in sidebar on click:
     showFlickrPhotos(marker);
   });
-};
 
 for (var l=0; l<initialLocations.length; l++){
   getAjax(initialLocations[l]);
-  getMarker(initialLocations[l]);
 };
 
 // ** ViewModel for sidebar **
