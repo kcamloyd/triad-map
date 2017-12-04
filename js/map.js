@@ -91,55 +91,40 @@ function getAjax(location) {
 };
 
 // Initialize map with markers
-var map, mark;
+var map;
 
 function initMap() {
-  try {
-    map = new google.maps.Map(document.getElementById("map"), {
-      center: {lat: 36.109034, lng: -79.859619},
-      zoom: 10
-    });
-  }
-  catch (err) {
-    document.getElementById("map").innerHTML = "<p>There was an error retreiving data from the " +
-      "Google Maps API. Please refresh the page or <a target='blank' " +
-      "href='https://twitter.com/KCamLoyd'>contact the site " +
-      "administrator</a>.</p>"
-  }
-
-  function getMarker(marker){
-    // Displays marker on map
-    var mark = new google.maps.Marker({
-      position: {lat: marker.lat, lng: marker.lng},
-      map: map,
-      title: marker.title
-    });
-  };
-
-  for (var l=0; l<initialLocations.length; l++){
-    getMarker(initialLocations[l]);
-  };
-};
-
-
-  // Displays info window and flickr photos when marker is clicked
-  mark.addListener("click", function(){
-    // Info window:
-    var info = new google.maps.InfoWindow({
-      content: infoContent(marker),
-    });
-    mark.setAnimation(google.maps.Animation.BOUNCE);
-    setTimeout(function(){
-      mark.setAnimation(null);
-    }, 1400)
-    info.open(map, mark);
-
-    // Show flickr photo carousel in sidebar on click:
-    showFlickrPhotos(marker);
+  // Generate new Google Map
+  map = new google.maps.Map(document.getElementById("map"), {
+    center: {lat: 36.109034, lng: -79.859619},
+    zoom: 10
   });
 
-for (var l=0; l<initialLocations.length; l++){
-  getAjax(initialLocations[l]);
+  // Generate a marker for a given location
+  var getMarker = function (location){
+    location.marker = new google.maps.Marker({
+      position: {lat: location.lat, lng: location.lng},
+      map: map,
+      title: location.title
+    });
+
+    location.marker.addListener("click", function(){
+      var info = new google.maps.InfoWindow({
+          content: infoContent(location),
+        });
+      location.marker.setAnimation(google.maps.Animation.BOUNCE);
+      setTimeout(function(){
+        location.marker.setAnimation(null);
+      }, 1400);
+      info.open(map, location.marker);
+      showFlickrPhotos(location.marker);
+    });
+  };
+
+  // Call marker generator function for each location
+  initialLocations.forEach(function(location) {
+    getMarker(location);
+  });
 };
 
 // ** ViewModel for sidebar **
@@ -169,35 +154,19 @@ var ListViewModel = function() {
 
   this.query.subscribe(this.search);
 
-  // // Create observable array to display filtered location list
-  // this.currentLocations = ko.observableArray([]);
-  //
-  // // Declare KO observable to read search field input
-  // this.searchTerm = ko.observable("");
-  //
-  // // Read searchTerm and filter currentLocations
-  // this.locationList().forEach(function(locationItem){
-  //   // Make lowercase copies of location titles and search term for matching
-  //   var title = locationItem.title.toLowerCase();
-  //   var search = self.searchTerm().toLowerCase();
-  //   // If no filter is applied:
-  //   if (self.searchTerm() === "") {
-  //     // Set initial currentLocations value to all locations
-  //     self.currentLocations = self.locationList;
-  //   }
-  //   // If the search term is found in the location title:
-  //   else if (title.indexOf(search) != -1) {
-  //     // Add the location to currentLocations
-  //     self.currentLocations.push(locationItem);
-  //   };
-  // });
-
-  // TODO: write the rest of this function:
   this.openInfoWindow = function(clickedLocation) {
-    // self.currentLocations(clickedLocation);
-    console.log("this will open the info window on the map");
+    var info = new google.maps.InfoWindow({
+        content: infoContent(location),
+      });
+    location.marker.setAnimation(google.maps.Animation.BOUNCE);
+    setTimeout(function(){
+      location.marker.setAnimation(null);
+    }, 1400);
+    info.open(map, location.marker);
+    showFlickrPhotos(clickedLocation.marker);
   };
 };
+
 ko.applyBindings(new ListViewModel());
 
 
