@@ -160,15 +160,21 @@ var ListViewModel = function() {
   this.query.subscribe(this.search);
 
   this.openInfoWindow = function(clickedLocation) {
+    var clicked;
+    initialLocations.forEach(function(location) {
+      if(location.title === clickedLocation.title) {
+        clicked = location
+      }
+    });
     var info = new google.maps.InfoWindow({
-        content: infoContent(location),
+        content: infoContent(clicked),
       });
-    location.marker.setAnimation(google.maps.Animation.BOUNCE);
+    clicked.marker.setAnimation(google.maps.Animation.BOUNCE);
     setTimeout(function(){
-      location.marker.setAnimation(null);
+      clicked.marker.setAnimation(null);
     }, 1400);
-    info.open(map, location.marker);
-    showFlickrPhotos(clickedLocation.marker);
+    info.open(map, clicked.marker);
+    showFlickrPhotos(clicked.marker);
   };
 };
 
