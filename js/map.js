@@ -88,7 +88,7 @@ function getAjax(location) {
 };
 
 // Initialize map with markers
-var map;
+var map, getMarker, clearMarker, showMarker;
 
 function initMap() {
   // Generate new Google Map
@@ -98,7 +98,7 @@ function initMap() {
   });
 
   // Generate a marker for a given location
-  var getMarker = function (location){
+  getMarker = function (location){
     location.marker = new google.maps.Marker({
       position: {lat: location.lat, lng: location.lng},
       map: map,
@@ -117,6 +117,14 @@ function initMap() {
       showFlickrPhotos(location.marker);
     });
   };
+
+  clearMarker = function(location) {
+    location.marker.setMap(null);
+  }
+
+  showMarker = function(location) {
+    location.marker.setMap(map);
+  }
 
   // Call marker generator function for each location
   initialLocations.forEach(function(location) {
@@ -144,21 +152,29 @@ var ListViewModel = function() {
     self.locationList.push(new Location(locationItem));
   });
 
+  // Filter list of locations to only include titles that match the search query
   // Filter code source: https://opensoul.org/2011/06/23/live-search-with-knockoutjs/
   this.query = ko.observable("")
 
   this.search = function(value) {
+    // Clear list of locations
     self.locationList.removeAll();
+    // Clear all markers
+    initialLocations.forEach(function(location) {
+      clearMarker(location);
+    });
 
     for(var l in initialLocations) {
       if(initialLocations[l].title.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
         self.locationList.push(initialLocations[l])
+        showMarker(initialLocations[l]);
       };
     };
   };
 
   this.query.subscribe(this.search);
 
+  // Open info window on map when item in list is clicked
   this.openInfoWindow = function(clickedLocation) {
     var clicked;
     initialLocations.forEach(function(location) {
