@@ -151,28 +151,28 @@ var ListViewModel = function() {
     self.locationList.push(new Location(locationItem));
   });
 
-  // Create observable array to display filtered location list
-  this.currentLocations = ko.observableArray([]);
-
-  // Declare KO observable to read search field input
-  this.searchTerm = ko.observable("");
-
-  // Read searchTerm and filter currentLocations
-  this.locationList().forEach(function(locationItem){
-    // Make lowercase copies of location titles and search term for matching
-    var title = locationItem.title.toLowerCase();
-    var search = self.searchTerm().toLowerCase();
-    // If no filter is applied:
-    if (self.searchTerm() === "") {
-      // Set initial currentLocations value to all locations
-      self.currentLocations = self.locationList;
-    }
-    // If the search term is found in the location title:
-    else if (title.indexOf(search) != -1) {
-      // Add the location to currentLocations
-      self.currentLocations.push(locationItem);
-    };
-  });
+  // // Create observable array to display filtered location list
+  // this.currentLocations = ko.observableArray([]);
+  //
+  // // Declare KO observable to read search field input
+  // this.searchTerm = ko.observable("");
+  //
+  // // Read searchTerm and filter currentLocations
+  // this.locationList().forEach(function(locationItem){
+  //   // Make lowercase copies of location titles and search term for matching
+  //   var title = locationItem.title.toLowerCase();
+  //   var search = self.searchTerm().toLowerCase();
+  //   // If no filter is applied:
+  //   if (self.searchTerm() === "") {
+  //     // Set initial currentLocations value to all locations
+  //     self.currentLocations = self.locationList;
+  //   }
+  //   // If the search term is found in the location title:
+  //   else if (title.indexOf(search) != -1) {
+  //     // Add the location to currentLocations
+  //     self.currentLocations.push(locationItem);
+  //   };
+  // });
 
   // TODO: write the rest of this function:
   this.openInfoWindow = function(clickedLocation) {
