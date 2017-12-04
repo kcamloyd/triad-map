@@ -119,7 +119,7 @@ function initMap() {
         location.marker.setAnimation(null);
       }, 1400);
       info.open(map, location.marker);
-      showFlickrPhotos(location.marker);
+      showFlickrPhotos(location);
     });
   };
 
@@ -195,7 +195,7 @@ var ListViewModel = function() {
       clicked.marker.setAnimation(null);
     }, 1400);
     info.open(map, clicked.marker);
-    showFlickrPhotos(clicked.marker);
+    showFlickrPhotos(clicked);
   };
 };
 
