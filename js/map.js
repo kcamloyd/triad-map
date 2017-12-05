@@ -132,6 +132,7 @@ function initMap() {
   var ListViewModel = function() {
     var self = this;
 
+    // Hide more photos on flickr link initially (until a location is clicked)
     this.showLink = ko.observable(false);
 
     // Create observable array to hold all location items
@@ -180,25 +181,22 @@ function initMap() {
       infoWindowMain.setContent(clickedLocation.info)
       // Open info window with new content
       infoWindowMain.open(map, clickedLocation.marker);
+      // TODO: fix bindings to update after each new click (?)
+      // Clear photo list
       self.photoList.removeAll();
+      // Populate photo list with photos for clicked location
       clickedLocation.photos.forEach(function(photo) {
         self.photoList.push(photo);
       });
+      // Set more photos link to the correct url for the clicked location
+      // TODO: add correct binding (?)
       self.flickrLink = ko.observable(clickedLocation.flickrLink);
+      // Make sure the link to more photos is visible
       self.showLink(true);
       // Materialize JS to initialize carousel
       $('.carousel').carousel();
-    };
-
-    // *** when someone clicks on a list item or marker,
-    // *** clear photo list
-    // *** populate photo list with photos key from location object
-    // *** change visible on photo div to true
-    // *** Materialize JS to initialize carousel
-          // $('.carousel').carousel();
-
-
-
+      // TODO: add error handling for flickr api
+    }; // End infoPhotoDisplay
   }; // End viewModel
 
   // Activate knockout bindings
