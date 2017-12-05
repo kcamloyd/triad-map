@@ -22,10 +22,8 @@
 
         <div class="section row">
           <div class="input-field col s12">
-            <input type="search"
-              data-bind="value: query, valueUpdate: 'keyup'"
-              autocomplete:"off">
-            <label for="search">Filter by place name</lable>
+            <input type="search" data-bind="value: query, valueUpdate: 'keyup'">
+            <label for="search">Filter by place name</label>
           </div>
         </div>
 
@@ -43,10 +41,9 @@
 
         <div class="section row">
           <div class="flickr-photos col s12">
-            <div class="carousel center" style="height: 200px; margin-top: 15px;"
-              data-bind="showCarousel: true, foreach: photoList">
+            <div class="carousel center" style="height: 200px; margin-top: 15px;" data-bind="foreach: {data: photoList, afterRender: initCarousel()}">
                 <a class="carousel-item" data-bind="attr: {href: href}">
-                  <img data-bind="attr: {src: thumbSource}">
+                  <img src=# alt="photo from flickr" data-bind="attr: {src: thumbSource}">
                 </a>
             </div>
 

@@ -68,6 +68,10 @@ function getAjax(location) {
         );
       };
       location.photos = photoLinks;
+    },
+    error: function() {
+      window.alert("There was an error in the Flickr API. Please reload the page" +
+        "or contact the site administrator");
     }
   });
 };
@@ -162,10 +166,10 @@ function initMap() {
 
     this.flickrError = ko.observable();
 
-    // // Materialize JS to initialize carousel
-    // this.initCarousel = function() {
-    //   $('.carousel').carousel();
-    // }
+    // Materialize JS to initialize carousel
+    this.initCarousel = function() {
+      $('.carousel').carousel();
+    }
 
     // Function for list items to open info window and display Flickr photos
     this.infoPhotoDisplay = function(clickedLocation) {
@@ -207,13 +211,13 @@ function initMap() {
     });
   }; // End viewModel
 
-  ko.bindingHandlers.showCarousel = {
-    update: function(element, valueAccessor) {
-      if(valueAccessor() === true) {
-        $(element).carousel();
-      };
-    }
-  };
+  // ko.bindingHandlers.showCarousel = {
+  //   update: function(element, valueAccessor) {
+  //     if(valueAccessor() === true) {
+  //       $(element).carousel();
+  //     };
+  //   }
+  // };
 
   // Activate knockout bindings
   ko.applyBindings(new ListViewModel());
