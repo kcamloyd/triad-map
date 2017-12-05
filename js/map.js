@@ -169,7 +169,10 @@ function initMap() {
     // Create observable array to hold all photo links for one location
     this.photoList = ko.observableArray([]);
 
+    // Observable for displaying link to more photos on Flickr
     this.flickrLink = ko.observable();
+
+    this.flickrError = ko.observable();
 
     // Function for list items to open info window and display Flickr photos
     this.infoPhotoDisplay = function(clickedLocation) {
@@ -183,6 +186,12 @@ function initMap() {
       infoWindowMain.setContent(clickedLocation.info)
       // Open info window with new content
       infoWindowMain.open(map, clickedLocation.marker);
+      // Display message if there has been an error in the Flickr API call
+      if (clickedLocation.photos === undefined) {
+        self.flickrError("There was an error retreiving data from the " +
+            "Flickr API. Please refresh the page or contact the site " +
+            "administrator.")
+      };
       // TODO: fix bindings to update after each new click (?)
       // Clear photo list
       self.photoList.removeAll();
@@ -197,7 +206,6 @@ function initMap() {
       self.showLink(true);
       // Materialize JS to initialize carousel
       $('.carousel').carousel();
-      // TODO: add error handling for flickr api
     }; // End infoPhotoDisplay
   }; // End viewModel
 

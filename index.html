@@ -42,7 +42,7 @@
         </div>
 
         <div class="section row">
-          <div class="flickr-photos col s12">
+          <div class="flickr-photos col s12" data-bind="text: flickrError">
             <!-- TODO: subscribe this element to updates on photoList
                   Displays correctly on first click, not on any clicks after (?) -->
             <div class="carousel center" style="height: 200px; margin-top: 15px;" data-bind="foreach: photoList">
