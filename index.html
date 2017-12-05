@@ -43,12 +43,11 @@
 
         <div class="section row">
           <div class="flickr-photos col s12">
-            <!-- TODO: subscribe this element to updates on photoList
-                  Displays correctly on first click, not on any clicks after (?) -->
-            <div class="carousel center" style="height: 200px; margin-top: 15px;" data-bind="foreach: photoList">
-              <a class="carousel-item" data-bind="attr: {href: href}">
-                <img data-bind="attr: {src: thumbSource}">
-              </a>
+            <div class="carousel center" style="height: 200px; margin-top: 15px;"
+              data-bind="foreach: photoList">
+                <a class="carousel-item" data-bind="attr: {href: href}">
+                  <img data-bind="attr: {src: thumbSource}">
+                </a>
             </div>
 
             <div data-bind="visible: showErrorMessage">

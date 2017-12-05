@@ -181,14 +181,12 @@ function initMap() {
             "Flickr API. Please refresh the page or contact the site " +
             "administrator.")
       };
-      // TODO: fix bindings to update after each new click (?)
       // Clear photo list
       self.photoList.removeAll();
       // Populate photo list with photos for clicked location
       clickedLocation.photos.forEach(function(photo) {
         self.photoList.push(photo);
       });
-      console.log(self.photoList());
       // Set more photos link to the correct url for the clicked location
       self.flickrLink(clickedLocation.flickrLink);
       // Make sure the link to more photos is visible
