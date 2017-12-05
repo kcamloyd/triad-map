@@ -33,7 +33,7 @@
           <div class="col s12">
             <label class="section-label">Locations</label>
             <ul class="list" data-bind="foreach: locationList">
-              <li data-bind="text: title, click: $parent.openInfoWindow"></li>
+              <li data-bind="text: title, click: $parent.infoPhotoDisplay"></li>
             </ul>
           </div>
         </div>
@@ -41,20 +41,20 @@
         <div class="divider">
         </div>
 
-        <div class="section row" data-bind="visible: photosEnabled">
+        <div class="section row">
           <div class="flickr-photos col s12">
-            <div
-              class="carousel center"
-              style="height: 200px; margin-top: 15px;"
-              data-bind="foreach: photoList">
+            <!-- subscribe this element to updates on photoList -->
+            <div class="carousel center" style="height: 200px; margin-top: 15px;" data-bind="foreach: photoList">
               <a class="carousel-item" data-bind="attr: {href: href}">
                 <img data-bind="attr: {src: thumbSource}">
               </a>
             </div>
 
-            <a target='blank' data-bind="attr: {href: locationList.flickrLink}">
-              <p class='center'>View more photos on Flickr</p>
-            </a>
+            <div class="center" data-bind="visible: showLink">
+              <a target="blank" data-bind="attr: {href: flickrLink}">
+                <p>View more photos on Flickr</p>
+              </a>
+            </div>
           </div>
         </div>
       </aside>

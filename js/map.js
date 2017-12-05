@@ -42,7 +42,7 @@ var initialLocations = [
   }
 ];
 
-// Get Flickr photo data for each location
+// flickr ajax function
 function getAjax(location) {
   location.flickrLink = "https://www.flickr.com/search/?tags=" + location.title;
   // Set the Flickr api request url to search photos with the location name as a tag
@@ -57,10 +57,10 @@ function getAjax(location) {
   $.ajax({
     url: flickrRequestUrl,
     success: function(response) {
-      var photoList = response.photos.photo;
+      var responseData = response.photos.photo;
       var hrefs = ["#one!", "#two!", "#three!", "#four!", "#five!", "#six!", "#seven!", "#eight!", "#nine!", "#ten!"]
-      for (var i=0; i<photoList.length; i++){
-        var photo = photoList[i];
+      for (var i=0; i<responseData.length; i++){
+        var photo = responseData[i];
         photoLinks.push(
           {"thumbSource": "https://farm" + photo.farm + ".staticflickr.com/" +
             photo.server + "/" + photo.id + "_" + photo.secret + "_q.jpg",
@@ -72,71 +72,137 @@ function getAjax(location) {
   });
 };
 
-initialLocations.forEach(function(location) {
+// Send ajax requests for each location
+initialLocations.forEach(function (location){
   getAjax(location);
-})
+});
 
-// Class for creating new knockout observable locations
-var Location = function(data) {
-  this.title = data.title;
-  this.lat = data.lat;
-  this.lng = data.lng;
-  this.position = ko.computed(function() {
-    return {lat: this.lat, lng: this.lng};
-  }, this);
-  this.interests = data.interests;
-  this.link = data.link;
-  this.description = data.description;
-  this.photos = data.photos;
-  this.flickrLink = data.flickrLink;
-}
-
-
-// *** ViewModels ***
-// ** ViewModel for map **
+// *** ViewModel ***
 // Initialize map with markers
-var map, getMarker, clearMarker, showMarker;
-
 function initMap() {
   // Generate new Google Map
-  map = new google.maps.Map(document.getElementById("map"), {
+  var map = new google.maps.Map(document.getElementById("map"), {
     center: {lat: 36.109034, lng: -79.859619},
     zoom: 10
   });
 
+  var infoWindowMain = new google.maps.InfoWindow({
+    content: ""
+  });
+
   // Generate a marker for a given location
-  getMarker = function (location){
+  var getMarker = function (location) {
     location.marker = new google.maps.Marker({
       position: {lat: location.lat, lng: location.lng},
       map: map,
       title: location.title
     });
 
+    // Add click event on marker to animate and open info window
     location.marker.addListener("click", function(){
-      var info = new google.maps.InfoWindow({
-          content: infoContent(location),
-        });
+      infoWindowMain.close();
+      // Set marker animation
       location.marker.setAnimation(google.maps.Animation.BOUNCE);
       setTimeout(function(){
         location.marker.setAnimation(null);
       }, 1400);
-      info.open(map, location.marker);
-      showFlickrPhotos(location);
+      // Set info window content
+      infoWindowMain.setContent(location.info)
+      // Open info window with new content
+      infoWindowMain.open(map, location.marker);
     });
   };
 
-  clearMarker = function(location) {
-    location.marker.setMap(null);
-  }
-
-  showMarker = function(location) {
-    location.marker.setMap(map);
-  }
-
-  // Call marker generator function for each location
+  // Call marker generator and info window generator functions for each location
   initialLocations.forEach(function(location) {
+    location.info = infoContent(location);
     getMarker(location);
   });
+
+  // Clear marker (called in filter function in ListViewModel)
+  var clearMarker = function(location) {
+    location.marker.setMap(null);
+  };
+
+  // Show marker (called in filter function in ListViewModel)
+  var showMarker = function(location) {
+    location.marker.setMap(map);
+  };
+
+  var ListViewModel = function() {
+    var self = this;
+
+    this.showLink = ko.observable(false);
+
+    // Create observable array to hold all location items
+    this.locationList = ko.observableArray([]);
+
+    // Populate locationList with all locations
+    initialLocations.forEach(function(location){
+      self.locationList.push(location);
+    });
+
+    // Filter list of locations to only include titles that match the search query
+    // Filter code source: https://opensoul.org/2011/06/23/live-search-with-knockoutjs/
+    // Set query value as observable
+    this.query = ko.observable("")
+
+    this.search = function(value) {
+      // Clear list of locations
+      self.locationList.removeAll();
+      // Clear all markers
+      initialLocations.forEach(function(location) {
+        clearMarker(location);
+      });
+
+      for(var l in initialLocations) {
+        if(initialLocations[l].title.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+          self.locationList.push(initialLocations[l])
+          showMarker(initialLocations[l]);
+        };
+      };
+    };
+
+    this.query.subscribe(this.search);
+
+    // Create observable array to hold all photo links for one location
+    this.photoList = ko.observableArray([]);
+
+    // Function for list items to open info window and display Flickr photos
+    this.infoPhotoDisplay = function(clickedLocation) {
+      infoWindowMain.close();
+      // Set marker animation
+      clickedLocation.marker.setAnimation(google.maps.Animation.BOUNCE);
+      setTimeout(function(){
+        clickedLocation.marker.setAnimation(null);
+      }, 1400);
+      // Set info window content
+      infoWindowMain.setContent(clickedLocation.info)
+      // Open info window with new content
+      infoWindowMain.open(map, clickedLocation.marker);
+      self.photoList.removeAll();
+      clickedLocation.photos.forEach(function(photo) {
+        self.photoList.push(photo);
+      });
+      self.flickrLink = ko.observable(clickedLocation.flickrLink);
+      self.showLink(true);
+      // Materialize JS to initialize carousel
+      $('.carousel').carousel();
+    };
+
+    // *** when someone clicks on a list item or marker,
+    // *** clear photo list
+    // *** populate photo list with photos key from location object
+    // *** change visible on photo div to true
+    // *** Materialize JS to initialize carousel
+          // $('.carousel').carousel();
+
+
+
+  }; // End viewModel
+
+  // Activate knockout bindings
+  ko.applyBindings(new ListViewModel());
 }; // End initMap
 
 // Error handling for Google Map API
@@ -146,87 +212,6 @@ function mapError() {
       "href='https://twitter.com/KCamLoyd'>contact the site " +
       "administrator</a>.</p>"
 };
-
-// ** ViewModel for sidebar **
-var ListViewModel = function() {
-  var self = this;
-
-  // Create observable array to hold all location items
-  this.locationList = ko.observableArray([]);
-
-  // Create observable array to hold all photo info for current location
-  this.photoList = ko.observableArray([]);
-
-  initialLocations.forEach(function(location){
-    // Populate locationList with all locations
-    self.locationList.push(new Location(location));
-  });
-  // Shows that photos key is undefined - ajax calls are not writing data to
-  // initialLocations before data is passed into locationList
-  console.log(this.locationList());
-
-  // this.showFlickrPhotos = function(location) {
-  //   $('.carousel').carousel();
-  // }
-
-  // Filter list of locations to only include titles that match the search query
-  // Filter code source: https://opensoul.org/2011/06/23/live-search-with-knockoutjs/
-  this.query = ko.observable("")
-
-  this.search = function(value) {
-    // Clear list of locations
-    self.locationList.removeAll();
-    // Clear all markers
-    initialLocations.forEach(function(location) {
-      clearMarker(location);
-    });
-
-    for(var l in initialLocations) {
-      if(initialLocations[l].title.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
-        self.locationList.push(initialLocations[l])
-        showMarker(initialLocations[l]);
-      };
-    };
-  };
-
-  this.photosEnabled = ko.observable(false);
-
-  this.showFlickrPhotos = function(location) {
-    self.photoList.removeAll();
-    for(var p in location.photos) {
-      self.photoList.push(location.photos[p]);
-    };
-    this.photosEnabled(true);
-    // Materialize JS to initialize carousel
-    $('.carousel').carousel();
-  };
-
-  this.query.subscribe(this.search);
-
-  // Open info window on map when item in list is clicked
-  this.openInfoWindow = function(clickedLocation) {
-    var clicked;
-    initialLocations.forEach(function(location) {
-      if(location.title === clickedLocation.title) {
-        clicked = location
-      }
-    });
-    var info = new google.maps.InfoWindow({
-        content: infoContent(clicked),
-      });
-    clicked.marker.setAnimation(google.maps.Animation.BOUNCE);
-    setTimeout(function(){
-      clicked.marker.setAnimation(null);
-    }, 1400);
-    info.open(map, clicked.marker);
-    self.showFlickrPhotos(clicked);
-  };
-};
-
-setTimeout(function(){
-  ko.applyBindings(new ListViewModel());;
-}, 200);
-
 
 // *** View ***
 // Generate HTML to render place link and description in info window
