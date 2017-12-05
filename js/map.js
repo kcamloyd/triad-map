@@ -97,20 +97,6 @@ function initMap() {
       map: map,
       title: location.title
     });
-
-    // Add click event on marker to animate and open info window
-    location.marker.addListener("click", function(){
-      infoWindowMain.close();
-      // Set marker animation
-      location.marker.setAnimation(google.maps.Animation.BOUNCE);
-      setTimeout(function(){
-        location.marker.setAnimation(null);
-      }, 1400);
-      // Set info window content
-      infoWindowMain.setContent(location.info)
-      // Open info window with new content
-      infoWindowMain.open(map, location.marker);
-    });
   };
 
   // Call marker generator and info window generator functions for each location
@@ -210,6 +196,13 @@ function initMap() {
       // Materialize JS to initialize carousel
       $('.carousel').carousel();
     }; // End infoPhotoDisplay
+
+    // Set click events for each marker
+    initialLocations.forEach(function(location) {
+      location.marker.addListener("click", function() {
+        self.infoPhotoDisplay(location);
+      });
+    });
   }; // End viewModel
 
   // Activate knockout bindings
