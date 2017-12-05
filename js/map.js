@@ -135,6 +135,8 @@ function initMap() {
     // Hide more photos on flickr link initially (until a location is clicked)
     this.showLink = ko.observable(false);
 
+    this.showErrorMessage = ko.observable(false);
+
     // Create observable array to hold all location items
     this.locationList = ko.observableArray([]);
 
@@ -167,7 +169,7 @@ function initMap() {
     this.query.subscribe(this.search);
 
     // Create observable array to hold all photo links for one location
-    this.photoList = ko.observableArray([]);
+    this.photoList = ko.observableArray();
 
     // Observable for displaying link to more photos on Flickr
     this.flickrLink = ko.observable();
@@ -188,6 +190,7 @@ function initMap() {
       infoWindowMain.open(map, clickedLocation.marker);
       // Display message if there has been an error in the Flickr API call
       if (clickedLocation.photos === undefined) {
+        self.showErrorMessage(true);
         self.flickrError("There was an error retreiving data from the " +
             "Flickr API. Please refresh the page or contact the site " +
             "administrator.")
