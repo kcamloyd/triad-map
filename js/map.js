@@ -169,6 +169,8 @@ function initMap() {
     // Create observable array to hold all photo links for one location
     this.photoList = ko.observableArray([]);
 
+    this.flickrLink = ko.observable();
+
     // Function for list items to open info window and display Flickr photos
     this.infoPhotoDisplay = function(clickedLocation) {
       infoWindowMain.close();
@@ -188,9 +190,9 @@ function initMap() {
       clickedLocation.photos.forEach(function(photo) {
         self.photoList.push(photo);
       });
+      console.log(self.photoList());
       // Set more photos link to the correct url for the clicked location
-      // TODO: add correct binding (?)
-      self.flickrLink = ko.observable(clickedLocation.flickrLink);
+      self.flickrLink(clickedLocation.flickrLink);
       // Make sure the link to more photos is visible
       self.showLink(true);
       // Materialize JS to initialize carousel
