@@ -47,8 +47,9 @@ function getAjax(location) {
   location.flickrLink = "https://www.flickr.com/search/?tags=" + location.title;
   // Set the Flickr api request url to search photos with the location name as a tag
   var flickrRequestUrl = "https://api.flickr.com/services/rest/?method=" +
-    "flickr.photos.search&api_key=cd7a678487f7cec2b53ed11ba7a1de15&tags=" +
-    location.title + "&sort=relevance&format=json&nojsoncallback=1";
+    "flickr.photos.search&api_key=cd7a678487f7cec2b53ed11ba7a1de15" +
+    "&content_type=1&per_page=10&tags=" + location.title +
+    "&sort=relevance&format=json&nojsoncallback=1";
   // Create an empty array to temporarily store links for each photo returned by ajax call
   // Also clears the array before the ajax call for the next location
   var photoLinks = [];
@@ -58,7 +59,7 @@ function getAjax(location) {
     success: function(response) {
       var photoList = response.photos.photo;
       var hrefs = ["#one!", "#two!", "#three!", "#four!", "#five!", "#six!", "#seven!", "#eight!", "#nine!", "#ten!"]
-      for (var i=0; i<10; i++){
+      for (var i=0; i<photoList.length; i++){
         var photo = photoList[i];
         photoLinks.push(
           {"thumbSource": "https://farm" + photo.farm + ".staticflickr.com/" +
@@ -86,7 +87,8 @@ var Location = function(data) {
   this.interests = data.interests;
   this.link = data.link;
   this.description = data.description;
-  this.photoLinks = data.photoLinks;
+  this.photos = data.photos;
+  this.flickrLink = data.flickrLink;
 }
 
 
@@ -152,10 +154,20 @@ var ListViewModel = function() {
   // Create observable array to hold all location items
   this.locationList = ko.observableArray([]);
 
-  initialLocations.forEach(function(locationItem){
+  // Create observable array to hold all photo info for current location
+  this.photoList = ko.observableArray([]);
+
+  initialLocations.forEach(function(location){
     // Populate locationList with all locations
-    self.locationList.push(new Location(locationItem));
+    self.locationList.push(new Location(location));
   });
+  // Shows that photos key is undefined - ajax calls are not writing data to
+  // initialLocations before data is passed into locationList
+  console.log(this.locationList());
+
+  // this.showFlickrPhotos = function(location) {
+  //   $('.carousel').carousel();
+  // }
 
   // Filter list of locations to only include titles that match the search query
   // Filter code source: https://opensoul.org/2011/06/23/live-search-with-knockoutjs/
@@ -177,6 +189,18 @@ var ListViewModel = function() {
     };
   };
 
+  this.photosEnabled = ko.observable(false);
+
+  this.showFlickrPhotos = function(location) {
+    self.photoList.removeAll();
+    for(var p in location.photos) {
+      self.photoList.push(location.photos[p]);
+    };
+    this.photosEnabled(true);
+    // Materialize JS to initialize carousel
+    $('.carousel').carousel();
+  };
+
   this.query.subscribe(this.search);
 
   // Open info window on map when item in list is clicked
@@ -195,15 +219,16 @@ var ListViewModel = function() {
       clicked.marker.setAnimation(null);
     }, 1400);
     info.open(map, clicked.marker);
-    showFlickrPhotos(clicked);
+    self.showFlickrPhotos(clicked);
   };
 };
 
-ko.applyBindings(new ListViewModel());
+setTimeout(function(){
+  ko.applyBindings(new ListViewModel());;
+}, 200);
 
 
 // *** View ***
-// ** View for map **
 // Generate HTML to render place link and description in info window
 function infoContent(location){
   var content =
@@ -212,34 +237,4 @@ function infoContent(location){
     "</a>" +
     "<p>" + location.description + "</p>";
   return content;
-};
-
-// ** View for sidebar **
-// Generate flickr photos view in sidebar
-function showFlickrPhotos(location) {
-  var photoDisplay = "<div class='flickr-photos col s12'>"
-  if (location.photos) {
-    photoDisplay += "<div class='carousel center' style='height: 200px; margin-top: 15px;'>";
-    location.photos.forEach(function(photo){
-      photoDisplay +=  "<a class='carousel-item' href='" + photo.href + "'>" +
-                    "<img src='" + photo.thumbSource + "'>" +
-                  "</a>";
-    });
-    photoDisplay += "</div>" +
-      "<a target='blank' href='" + location.flickrLink + "'>" +
-        "<p class='center'>View more photos on Flickr</p>" +
-      "</a>" +
-      "<script type='text/javascript'>" +
-        "$(document).ready(function(){$('.carousel').carousel();});" +
-      "</script>";
-  }
-  else {
-    photoDisplay += "<p>There was an error loading photos from Flickr. " +
-      "Please refresh the page or <a target='blank' " +
-      "href='https://twitter.com/KCamLoyd'>contact the site " +
-      "administrator</a>.</p>"
-  };
-  photoDisplay += "</div>"
-
-  $('.flickr-photos').replaceWith(photoDisplay);
 };

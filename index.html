@@ -41,9 +41,20 @@
         <div class="divider">
         </div>
 
-        <div class="section row">
+        <div class="section row" data-bind="visible: photosEnabled">
           <div class="flickr-photos col s12">
-            <p>Click a location in the list above or a marker in the map to see the top ten photos from that location on Flickr.</p>
+            <div
+              class="carousel center"
+              style="height: 200px; margin-top: 15px;"
+              data-bind="foreach: photoList">
+              <a class="carousel-item" data-bind="attr: {href: href}">
+                <img data-bind="attr: {src: thumbSource}">
+              </a>
+            </div>
+
+            <a target='blank' data-bind="attr: {href: locationList.flickrLink}">
+              <p class='center'>View more photos on Flickr</p>
+            </a>
           </div>
         </div>
       </aside>
