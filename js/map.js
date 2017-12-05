@@ -162,6 +162,11 @@ function initMap() {
 
     this.flickrError = ko.observable();
 
+    // // Materialize JS to initialize carousel
+    // this.initCarousel = function() {
+    //   $('.carousel').carousel();
+    // }
+
     // Function for list items to open info window and display Flickr photos
     this.infoPhotoDisplay = function(clickedLocation) {
       infoWindowMain.close();
@@ -191,8 +196,7 @@ function initMap() {
       self.flickrLink(clickedLocation.flickrLink);
       // Make sure the link to more photos is visible
       self.showLink(true);
-      // Materialize JS to initialize carousel
-      $('.carousel').carousel();
+      // self.initCarousel();
     }; // End infoPhotoDisplay
 
     // Set click events for each marker
@@ -202,6 +206,14 @@ function initMap() {
       });
     });
   }; // End viewModel
+
+  ko.bindingHandlers.showCarousel = {
+    update: function(element, valueAccessor) {
+      if(valueAccessor() === true) {
+        $(element).carousel();
+      };
+    }
+  };
 
   // Activate knockout bindings
   ko.applyBindings(new ListViewModel());
