@@ -1,16 +1,21 @@
 html,
 body,
-main,
 .tall {
   height: 100%;
+}
+
+main {
+  height: 76%;
 }
 
 #map {
   height: 100%;
 }
 
-header {
+header,
+footer {
   text-align: center;
+  height: 12%;
 }
 
 .row {
