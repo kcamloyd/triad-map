@@ -41,7 +41,7 @@
 
         <div class="section row">
           <div class="flickr-photos col s12">
-            <div class="carousel center" style="height: 200px; margin-top: 15px;" data-bind="foreach: {data: photoList, afterRender: initCarousel()}">
+            <div class="carousel center" style="height: 200px; margin-top: 15px;" data-bind="foreach: photoList">
                 <a class="carousel-item" data-bind="attr: {href: href}">
                   <img src=# alt="photo from flickr" data-bind="attr: {src: thumbSource}">
                 </a>

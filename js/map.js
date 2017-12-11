@@ -166,11 +166,6 @@ function initMap() {
 
     this.flickrError = ko.observable();
 
-    // Materialize JS to initialize carousel
-    this.initCarousel = function() {
-      $('.carousel').carousel();
-    }
-
     // Function for list items to open info window and display Flickr photos
     this.infoPhotoDisplay = function(clickedLocation) {
       infoWindowMain.close();
@@ -200,7 +195,10 @@ function initMap() {
       self.flickrLink(clickedLocation.flickrLink);
       // Make sure the link to more photos is visible
       self.showLink(true);
-      // self.initCarousel();
+      // Materialize JS to destroy existing carousel
+      $('.carousel').carousel('destroy');
+      // Materialize JS to initialize carousel
+      $('.carousel').carousel();
     }; // End infoPhotoDisplay
 
     // Set click events for each marker
